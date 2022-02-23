@@ -11,5 +11,5 @@ func main() {
 	if err := root.NewCmdRoot().Execute(); err != nil {
 		fmt.Println(err)
 		os.Exit(1)
-	  }
+	}
 }
