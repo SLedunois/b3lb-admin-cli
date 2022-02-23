@@ -14,6 +14,8 @@ const defaultConfigFileName = ".b3lb.yaml"
 
 var defaultConfigPath = fmt.Sprintf("$HOME/%s", defaultConfigFileName)
 var configPath string
+
+// Config is the admin part config. It contains the b3lb api key
 var Config *config.AdminConfig
 
 func NewCmdRoot() *cobra.Command {
