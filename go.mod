@@ -2,7 +2,10 @@ module github.com/SLedunois/b3lbctl
 
 go 1.17
 
-require github.com/spf13/cobra v1.3.0
+require (
+	github.com/spf13/cobra v1.3.0
+	github.com/stretchr/testify v1.7.0
+)
 
 require (
 	github.com/davecgh/go-spew v1.1.1 // indirect
@@ -17,7 +20,6 @@ require (
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/rivo/uniseg v0.2.0 // indirect
 	github.com/sirupsen/logrus v1.8.1 // indirect
-	github.com/stretchr/testify v1.7.0 // indirect
 	github.com/ugorji/go/codec v1.2.6 // indirect
 	golang.org/x/crypto v0.0.0-20210921155107-089bfa567519 // indirect
 	google.golang.org/protobuf v1.27.1 // indirect
@@ -38,7 +40,7 @@ require (
 )
 
 require (
-	github.com/SLedunois/b3lb v1.2.2
+	github.com/SLedunois/b3lb v1.3.0
 	github.com/gookit/config/v2 v2.0.27 // indirect
 	github.com/gookit/goutil v0.3.15 // indirect
 	github.com/imdario/mergo v0.3.12 // indirect

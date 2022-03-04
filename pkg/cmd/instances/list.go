@@ -3,8 +3,8 @@ package instances
 import (
 	"fmt"
 
-	"github.com/SLedunois/b3lbctl/pkg/admin"
 	"github.com/SLedunois/b3lb/pkg/api"
+	"github.com/SLedunois/b3lbctl/pkg/admin"
 	"github.com/jedib0t/go-pretty/v6/table"
 	"github.com/jedib0t/go-pretty/v6/text"
 	"github.com/spf13/cobra"
@@ -17,8 +17,8 @@ var csvOutput bool
 func NewListCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "list",
-		Short: "List B3LB instances",
-		Long:  `List all B3LB instances available in your B3LB cluster`,
+		Short: "List BigBlueButton instances",
+		Long:  `List all BigBlueButton instances available in your B3LB cluster`,
 		RunE:  list,
 	}
 
