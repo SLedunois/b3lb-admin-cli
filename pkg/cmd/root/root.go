@@ -3,54 +3,40 @@ package root
 import (
 	"fmt"
 	"os"
-	"path/filepath"
 
-	"github.com/SLedunois/b3lb/pkg/config"
+	"github.com/SLedunois/b3lb-admin-cli/pkg/admin"
+	"github.com/SLedunois/b3lb-admin-cli/pkg/cmd/instances"
+	"github.com/SLedunois/b3lb-admin-cli/pkg/config"
+	"github.com/SLedunois/b3lb-admin-cli/pkg/system"
+	"github.com/SLedunois/b3lb/pkg/restclient"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
 
-const defaultConfigFileName = ".b3lb.yaml"
-
-var defaultConfigPath = fmt.Sprintf("$HOME/%s", defaultConfigFileName)
 var configPath string
 
-// Config is the admin part config. It contains the b3lb api key
-var Config *config.AdminConfig
+// NewCmd initialize the root command
+func NewCmd() *cobra.Command {
+	cobra.OnInitialize(func() {
+		restclient.Init()
+		admin.Init()
+		err := config.Init(viper.GetString("config"))
+		if err != nil {
+			fmt.Println(err)
+			os.Exit(system.NoSuchFileOrDirectoryExitCode)
+		}
+	})
 
-func NewCmdRoot() *cobra.Command {
-	cobra.OnInitialize(initConfig)
-	rootCmd := &cobra.Command{
+	cmd := &cobra.Command{
 		Use:   "b3lb-admin <command> [flags]",
 		Short: "B3LB admin cli",
 		Long:  `Manage your B3LB cluster from the command line`,
 		Run:   func(cmd *cobra.Command, args []string) {},
 	}
 
-	rootCmd.PersistentFlags().StringVar(&configPath, "config", "c", fmt.Sprintf("config file (default is %s)", defaultConfigPath))
-	viper.BindPFlag("config", rootCmd.PersistentFlags().Lookup("config"))
-	viper.SetDefault("config", "$HOME/.b3lb.yaml")
+	cmd.PersistentFlags().StringVar(&configPath, "config", config.DefaultConfigPath(), fmt.Sprintf("config file (default is %s)", config.DefaultConfigPath()))
+	viper.BindPFlag("config", cmd.PersistentFlags().Lookup("config"))
+	cmd.AddCommand(instances.NewCmd())
 
-	return rootCmd
-}
-
-func initConfig() {
-	path := viper.GetString("config")
-	if path == defaultConfigPath {
-		homeDir, err := os.UserHomeDir()
-		if err != nil {
-			fmt.Println(err)
-			os.Exit(1)
-		}
-
-		path = filepath.Join(homeDir, defaultConfigFileName)
-	}
-
-	c, err := config.Load(path)
-	if err != nil {
-		fmt.Println(fmt.Errorf("unable to load configuration: %s", err.Error()))
-		os.Exit(1)
-	}
-
-	Config = &c.Admin
+	return cmd
 }

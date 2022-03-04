@@ -1,0 +1,20 @@
+---
+bigbluebutton:
+  secret: bbb_secret
+  recordings_poll_interval: 1m
+balancer:
+  metrics_range: -5m
+admin:
+  api_key: b3lb_admin_api_key
+  url: http://localhost:8090
+port: 8090
+redis:
+  address: localhost:6379
+  password:
+  database: 0
+influxdb:
+  address: http://localhost:8086
+  token: influxdb_token
+  organization: b3lb
+  bucket: bucket
+...
