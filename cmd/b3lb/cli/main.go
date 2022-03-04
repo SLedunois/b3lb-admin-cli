@@ -5,11 +5,12 @@ import (
 	"os"
 
 	"github.com/SLedunois/b3lb-admin-cli/pkg/cmd/root"
+	"github.com/SLedunois/b3lb-admin-cli/pkg/system"
 )
 
 func main() {
-	if err := root.NewCmdRoot().Execute(); err != nil {
+	if err := root.NewCmd().Execute(); err != nil {
 		fmt.Println(err)
-		os.Exit(1)
+		os.Exit(system.OperationNotPermittedExitCode)
 	}
 }
