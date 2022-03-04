@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/SLedunois/b3lb-admin-cli/pkg/admin"
-	"github.com/SLedunois/b3lb-admin-cli/pkg/cmd/instances"
-	"github.com/SLedunois/b3lb-admin-cli/pkg/config"
-	"github.com/SLedunois/b3lb-admin-cli/pkg/system"
+	"github.com/SLedunois/b3lbctl/pkg/admin"
+	"github.com/SLedunois/b3lbctl/pkg/cmd/instances"
+	"github.com/SLedunois/b3lbctl/pkg/config"
+	"github.com/SLedunois/b3lbctl/pkg/system"
 	"github.com/SLedunois/b3lb/pkg/restclient"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -28,8 +28,8 @@ func NewCmd() *cobra.Command {
 	})
 
 	cmd := &cobra.Command{
-		Use:   "b3lb-admin <command> [flags]",
-		Short: "B3LB admin cli",
+		Use:   "b3lbctl <command> [flags]",
+		Short: "B3LB controller cli",
 		Long:  `Manage your B3LB cluster from the command line`,
 		Run:   func(cmd *cobra.Command, args []string) {},
 	}

@@ -3,7 +3,7 @@ package root
 import (
 	"testing"
 
-	"github.com/SLedunois/b3lb-admin-cli/pkg/config"
+	"github.com/SLedunois/b3lbctl/pkg/config"
 	"github.com/stretchr/testify/assert"
 )
 

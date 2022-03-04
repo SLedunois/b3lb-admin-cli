@@ -1,4 +1,4 @@
-module github.com/SLedunois/b3lb-admin-cli
+module github.com/SLedunois/b3lbctl
 
 go 1.17
 

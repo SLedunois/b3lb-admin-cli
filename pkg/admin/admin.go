@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 
-	"github.com/SLedunois/b3lb-admin-cli/pkg/config"
+	"github.com/SLedunois/b3lbctl/pkg/config"
 	"github.com/SLedunois/b3lb/pkg/api"
 	"github.com/SLedunois/b3lb/pkg/restclient"
 )

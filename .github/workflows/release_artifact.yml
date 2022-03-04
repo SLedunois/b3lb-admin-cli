@@ -3,8 +3,8 @@ on:
   release:
     types: [published]
 env:
-  BINARY_NAME: b3lb-admin
-  CMD_PATH: ./cmd/b3lb/cli
+  BINARY_NAME: b3lbctl
+  CMD_PATH: ./cmd/b3lbctl
 jobs:  
   releases-matrix:
     name: Build artifact

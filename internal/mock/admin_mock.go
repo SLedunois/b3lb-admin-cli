@@ -1,7 +1,7 @@
 package mock
 
 import (
-	"github.com/SLedunois/b3lb-admin-cli/pkg/admin"
+	"github.com/SLedunois/b3lbctl/pkg/admin"
 	"github.com/SLedunois/b3lb/pkg/api"
 )
 

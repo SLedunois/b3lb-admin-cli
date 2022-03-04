@@ -3,7 +3,7 @@ package instances
 import (
 	"fmt"
 
-	"github.com/SLedunois/b3lb-admin-cli/pkg/admin"
+	"github.com/SLedunois/b3lbctl/pkg/admin"
 	"github.com/SLedunois/b3lb/pkg/api"
 	"github.com/jedib0t/go-pretty/v6/table"
 	"github.com/jedib0t/go-pretty/v6/text"
