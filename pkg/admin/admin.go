@@ -4,10 +4,11 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"net/http"
 
-	"github.com/SLedunois/b3lbctl/pkg/config"
 	"github.com/SLedunois/b3lb/pkg/api"
 	"github.com/SLedunois/b3lb/pkg/restclient"
+	"github.com/SLedunois/b3lbctl/pkg/config"
 )
 
 // API is a public DefaultAdmin instance
@@ -16,6 +17,7 @@ var API Admin
 // Admin represents admin api interface
 type Admin interface {
 	List() ([]api.BigBlueButtonInstance, error)
+	Add(url string, secret string) error
 }
 
 // DefaultAdmin is the default admin api struct. It an empty struct
@@ -51,4 +53,27 @@ func (a *DefaultAdmin) List() ([]api.BigBlueButtonInstance, error) {
 	}
 
 	return instances, nil
+}
+
+// Add performs a add admin call on b3lb
+func (a *DefaultAdmin) Add(url string, secret string) error {
+	apiURL := fmt.Sprintf("%s/admin/servers", *config.URL)
+	instance := api.BigBlueButtonInstance{
+		URL:    url,
+		Secret: secret,
+	}
+
+	value, err := json.Marshal(instance)
+	if err != nil {
+		return err
+	}
+
+	headers := authorization()
+	headers["Content-Type"] = "application/json"
+	resp, restErr := restclient.PostWithHeaders(apiURL, headers, value)
+	if restErr == nil && resp.StatusCode != http.StatusCreated {
+		return fmt.Errorf("api respond with a %d status code instead of %d", resp.StatusCode, http.StatusCreated)
+	}
+
+	return restErr
 }

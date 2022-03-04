@@ -4,11 +4,11 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/SLedunois/b3lb/pkg/restclient"
 	"github.com/SLedunois/b3lbctl/pkg/admin"
 	"github.com/SLedunois/b3lbctl/pkg/cmd/instances"
 	"github.com/SLedunois/b3lbctl/pkg/config"
 	"github.com/SLedunois/b3lbctl/pkg/system"
-	"github.com/SLedunois/b3lb/pkg/restclient"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )

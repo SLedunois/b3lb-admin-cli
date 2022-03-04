@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"os"
 
 	"github.com/SLedunois/b3lbctl/pkg/cmd/root"
@@ -10,7 +9,6 @@ import (
 
 func main() {
 	if err := root.NewCmd().Execute(); err != nil {
-		fmt.Println(err)
 		os.Exit(system.OperationNotPermittedExitCode)
 	}
 }
