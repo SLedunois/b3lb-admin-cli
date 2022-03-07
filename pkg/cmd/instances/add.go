@@ -7,6 +7,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
+// AddCmd struct represents Add command object
 type AddCmd struct {
 	Command *cobra.Command
 	Flags   *AddFlags

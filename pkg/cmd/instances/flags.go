@@ -14,7 +14,7 @@ func NewListFlags() *ListFlags {
 	}
 }
 
-// Apply apply ListFlags to provided command
+// ApplyFlags apply ListFlags to provided command
 func (cmd *ListCmd) ApplyFlags() {
 	cmd.Command.Flags().BoolVarP(&cmd.Flags.CSV, "csv", "c", cmd.Flags.CSV, "csv output")
 	cmd.Command.Flags().BoolVarP(&cmd.Flags.JSON, "json", "j", cmd.Flags.JSON, "json output")

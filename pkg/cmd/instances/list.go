@@ -10,6 +10,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
+// ListCmd struct represents the list command object
 type ListCmd struct {
 	Command *cobra.Command
 	Flags   *ListFlags

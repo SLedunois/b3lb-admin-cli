@@ -13,9 +13,10 @@ import (
 	"github.com/spf13/viper"
 )
 
+// RootCmd struct represents the root command object
 type RootCmd struct {
 	Command *cobra.Command
-	Flags   *RootFlags
+	Flags   *Flags
 }
 
 // NewCmd initialize the root command

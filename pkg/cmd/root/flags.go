@@ -7,14 +7,14 @@ import (
 	"github.com/spf13/viper"
 )
 
-// RootFlags contains all root command flags
-type RootFlags struct {
+// Flags contains all root command flags
+type Flags struct {
 	ConfigPath string
 }
 
 // NewRootFlags initialize root command flags. It returns a RootFlags struct
-func NewRootFlags() *RootFlags {
-	return &RootFlags{}
+func NewRootFlags() *Flags {
+	return &Flags{}
 }
 
 // ApplyFlags apply RootFlags to provided command
