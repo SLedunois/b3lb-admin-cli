@@ -74,7 +74,7 @@ func TestListCmd(t *testing.T) {
 				assert.Nil(t, err)
 				out, outErr := ioutil.ReadAll(output)
 				assert.Nil(t, outErr)
-				expected := fmt.Sprintf(`URL,Secret
+				expected := fmt.Sprintf(`Url,Secret
 %s,%s`, url, secret)
 				assert.Equal(t, expected, strings.TrimSpace(string(out)))
 			},
@@ -91,7 +91,7 @@ func TestListCmd(t *testing.T) {
 				assert.Nil(t, err)
 				out, outErr := ioutil.ReadAll(output)
 				assert.Nil(t, outErr)
-				expected := fmt.Sprintf(`URL                             Secret  
+				expected := fmt.Sprintf(`Url                             Secret  
 %s  %s`, url, secret)
 				assert.Equal(t, expected, strings.TrimSpace(string(out)))
 			},
