@@ -10,36 +10,41 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var jsonOutput bool
-var csvOutput bool
+type ListCmd struct {
+	Command *cobra.Command
+	Flags   *ListFlags
+}
 
 // NewListCmd return the instances list subcommand
 func NewListCmd() *cobra.Command {
-	cmd := &cobra.Command{
-		Use:   "list",
-		Short: "List BigBlueButton instances",
-		Long:  `List all BigBlueButton instances available in your B3LB cluster`,
-		RunE:  list,
+	cmd := &ListCmd{
+		Command: &cobra.Command{
+			Use:   "list",
+			Short: "List BigBlueButton instances",
+			Long:  `List all BigBlueButton instances available in your B3LB cluster`,
+		},
+		Flags: NewListFlags(),
 	}
 
-	cmd.Flags().BoolVarP(&jsonOutput, "json", "j", false, "json output")
-	cmd.Flags().BoolVarP(&csvOutput, "csv", "c", false, "csv output")
+	cmd.Command.RunE = cmd.list
 
-	return cmd
+	cmd.ApplyFlags()
+
+	return cmd.Command
 }
 
-func list(cmd *cobra.Command, args []string) error {
+func (cmd *ListCmd) list(command *cobra.Command, args []string) error {
 	instances, err := admin.API.List()
 	if err != nil {
 		return fmt.Errorf("an error occured when getting remote instances: %s", err.Error())
 	}
 
-	if jsonOutput {
-		renderJSON(cmd, instances)
-	} else if csvOutput {
-		renderTable(cmd, instances, true)
+	if cmd.Flags.JSON {
+		renderJSON(command, instances)
+	} else if cmd.Flags.CSV {
+		renderTable(command, instances, true)
 	} else {
-		renderTable(cmd, instances, false)
+		renderTable(command, instances, false)
 	}
 
 	return nil
@@ -47,7 +52,7 @@ func list(cmd *cobra.Command, args []string) error {
 
 func renderTable(cmd *cobra.Command, instances []api.BigBlueButtonInstance, csv bool) {
 	t := table.NewWriter()
-	t.AppendHeader(table.Row{"URL", "Secret"})
+	t.AppendHeader(table.Row{"Url", "Secret"})
 
 	for _, instance := range instances {
 		t.AppendRow(table.Row{instance.URL, instance.Secret})

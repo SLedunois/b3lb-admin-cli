@@ -7,32 +7,35 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var url string
-var secret string
+type AddCmd struct {
+	Command *cobra.Command
+	Flags   *AddFlags
+}
 
 // NewAddCmd return the instances add subcommand
 func NewAddCmd() *cobra.Command {
-	cmd := &cobra.Command{
-		Use:   "add",
-		Short: "Add a BigBlueButton instance",
-		Long:  `Add a BigBlueButton instance in your B3LB cluster`,
-		RunE:  add,
+	cmd := &AddCmd{
+		Command: &cobra.Command{
+			Use:   "add",
+			Short: "Add a BigBlueButton instance",
+			Long:  `Add a BigBlueButton instance in your B3LB cluster`,
+		},
+		Flags: NewAddFlags(),
 	}
 
-	cmd.Flags().StringVarP(&url, "url", "u", "", "BigBlueButton instance url")
-	cmd.MarkFlagRequired("url")
-	cmd.Flags().StringVarP(&secret, "secret", "s", "", "BigBlueButton secret")
-	cmd.MarkFlagRequired("secret")
+	cmd.Command.RunE = cmd.process
 
-	return cmd
+	cmd.ApplyFlags()
+
+	return cmd.Command
 }
 
-func add(cmd *cobra.Command, args []string) error {
-	if err := admin.API.Add(url, secret); err != nil {
-		cmd.SilenceUsage = true
+func (cmd *AddCmd) process(command *cobra.Command, args []string) error {
+	if err := admin.API.Add(cmd.Flags.URL, cmd.Flags.Secret); err != nil {
+		command.SilenceUsage = true
 		return fmt.Errorf("unable to add BigBlueButton instance to your cluster: %s", err.Error())
 	}
 
-	cmd.Println(fmt.Sprintf(`instance %s added`, url))
+	command.Println(fmt.Sprintf(`instance %s added`, cmd.Flags.URL))
 	return nil
 }
