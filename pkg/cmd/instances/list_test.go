@@ -8,8 +8,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/SLedunois/b3lbctl/internal/mock"
 	"github.com/SLedunois/b3lb/pkg/api"
+	"github.com/SLedunois/b3lbctl/internal/mock"
 	"github.com/jedib0t/go-pretty/v6/text"
 	"github.com/stretchr/testify/assert"
 )
@@ -91,11 +91,8 @@ func TestListCmd(t *testing.T) {
 				assert.Nil(t, err)
 				out, outErr := ioutil.ReadAll(output)
 				assert.Nil(t, outErr)
-				expected := fmt.Sprintf(`┌────────────────────────────────┬────────┐
-│ URL                            │ SECRET │
-├────────────────────────────────┼────────┤
-│ %s │ %s │
-└────────────────────────────────┴────────┘`, url, secret)
+				expected := fmt.Sprintf(`URL                             Secret  
+%s  %s`, url, secret)
 				assert.Equal(t, expected, strings.TrimSpace(string(out)))
 			},
 		},

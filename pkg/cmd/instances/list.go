@@ -51,10 +51,9 @@ func renderTable(cmd *cobra.Command, instances []api.BigBlueButtonInstance, csv 
 
 	for _, instance := range instances {
 		t.AppendRow(table.Row{instance.URL, instance.Secret})
-		t.AppendSeparator()
 	}
 
-	t.SetStyle(table.StyleLight)
+	t.SetStyle(tableStyle())
 	if csv {
 		cmd.Println(t.RenderCSV())
 	} else {
@@ -64,4 +63,38 @@ func renderTable(cmd *cobra.Command, instances []api.BigBlueButtonInstance, csv 
 
 func renderJSON(cmd *cobra.Command, instances []api.BigBlueButtonInstance) {
 	cmd.Println(text.NewJSONTransformer("", "  ")(instances))
+}
+
+func tableStyle() table.Style {
+	return table.Style{
+		Name: "Docker style",
+		Box: table.BoxStyle{
+			BottomLeft:       "",
+			BottomRight:      "",
+			BottomSeparator:  "",
+			Left:             "",
+			LeftSeparator:    "",
+			MiddleHorizontal: "",
+			MiddleSeparator:  "",
+			MiddleVertical:   "",
+			PaddingLeft:      "",
+			PaddingRight:     "  ",
+			Right:            "",
+			RightSeparator:   "",
+			TopLeft:          "",
+			TopRight:         "",
+			TopSeparator:     "",
+			UnfinishedRow:    "",
+		},
+		Format: table.FormatOptions{
+			Header: text.FormatTitle,
+		},
+		Options: table.Options{
+			DrawBorder:      false,
+			SeparateColumns: false,
+			SeparateFooter:  false,
+			SeparateHeader:  false,
+			SeparateRows:    false,
+		},
+	}
 }
