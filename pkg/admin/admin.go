@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"net/url"
 
 	"github.com/SLedunois/b3lb/pkg/api"
 	"github.com/SLedunois/b3lb/pkg/restclient"
@@ -14,10 +15,13 @@ import (
 // API is a public DefaultAdmin instance
 var API Admin
 
+const urlFormatter = "%s/admin/servers"
+
 // Admin represents admin api interface
 type Admin interface {
 	List() ([]api.BigBlueButtonInstance, error)
 	Add(url string, secret string) error
+	Delete(instance string) error
 }
 
 // DefaultAdmin is the default admin api struct. It an empty struct
@@ -36,7 +40,7 @@ func authorization() map[string]string {
 
 // List performs a list admin call on b3lb
 func (a *DefaultAdmin) List() ([]api.BigBlueButtonInstance, error) {
-	url := fmt.Sprintf("%s/admin/servers", *config.URL)
+	url := fmt.Sprintf(urlFormatter, *config.URL)
 	resp, err := restclient.GetWithHeaders(url, authorization())
 	if err != nil {
 		return nil, err
@@ -57,7 +61,7 @@ func (a *DefaultAdmin) List() ([]api.BigBlueButtonInstance, error) {
 
 // Add performs a add admin call on b3lb
 func (a *DefaultAdmin) Add(url string, secret string) error {
-	apiURL := fmt.Sprintf("%s/admin/servers", *config.URL)
+	apiURL := fmt.Sprintf(urlFormatter, *config.URL)
 	instance := api.BigBlueButtonInstance{
 		URL:    url,
 		Secret: secret,
@@ -73,6 +77,17 @@ func (a *DefaultAdmin) Add(url string, secret string) error {
 	resp, restErr := restclient.PostWithHeaders(apiURL, headers, value)
 	if restErr == nil && resp.StatusCode != http.StatusCreated {
 		return fmt.Errorf("api respond with a %d status code instead of %d", resp.StatusCode, http.StatusCreated)
+	}
+
+	return restErr
+}
+
+// Delete performs a delete admin call on B3LB
+func (a *DefaultAdmin) Delete(instance string) error {
+	apiURL := fmt.Sprintf(urlFormatter+"?url=%s", *config.URL, url.QueryEscape(instance))
+	resp, restErr := restclient.DeleteWithHeaders(apiURL, authorization())
+	if restErr == nil && resp.StatusCode != http.StatusNoContent {
+		return fmt.Errorf("api respond with a %d status code instead of %d", resp.StatusCode, http.StatusNoContent)
 	}
 
 	return restErr
