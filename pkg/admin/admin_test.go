@@ -16,7 +16,7 @@ import (
 )
 
 var apiKey = "api_key"
-var url = "https://localhost:8090"
+var instance = "https://localhost:8090"
 
 type test struct {
 	name      string
@@ -27,7 +27,7 @@ type test struct {
 func initTests() {
 	Init()
 	config.APIKey = &apiKey
-	config.URL = &url
+	config.URL = &instance
 	restclient.Client = &restmock.RestClient{}
 
 }
@@ -144,6 +144,57 @@ func TestAdd(t *testing.T) {
 		t.Run(test.name, func(t *testing.T) {
 			test.mock()
 			err := API.Add("http://localhost:8080/bigbluebutton", "secret")
+			test.validator(t, nil, err)
+		})
+	}
+}
+
+func TestDelete(t *testing.T) {
+	initTests()
+	tests := []test{
+		{
+			name: "an error returned by the restclient should return an error",
+			mock: func() {
+				restmock.DoFunc = func(req *http.Request) (*http.Response, error) {
+					return nil, errors.New("http error")
+				}
+			},
+			validator: func(t *testing.T, instances []api.BigBlueButtonInstance, err error) {
+				assert.NotNil(t, err)
+			},
+		},
+		{
+			name: "no error returned by the restclient but an http code != 204 should return an error",
+			mock: func() {
+				restmock.DoFunc = func(req *http.Request) (*http.Response, error) {
+					return &http.Response{
+						StatusCode: http.StatusInternalServerError,
+					}, nil
+				}
+			},
+			validator: func(t *testing.T, instances []api.BigBlueButtonInstance, err error) {
+				assert.NotNil(t, err)
+			},
+		},
+		{
+			name: "no error and a 204 http status should return no error",
+			mock: func() {
+				restmock.DoFunc = func(req *http.Request) (*http.Response, error) {
+					return &http.Response{
+						StatusCode: http.StatusNoContent,
+					}, nil
+				}
+			},
+			validator: func(t *testing.T, instances []api.BigBlueButtonInstance, err error) {
+				assert.Nil(t, err)
+			},
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			test.mock()
+			err := API.Delete("http://localhost:8080/bigbluebutton")
 			test.validator(t, nil, err)
 		})
 	}

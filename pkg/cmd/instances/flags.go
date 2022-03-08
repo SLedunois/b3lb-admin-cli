@@ -38,3 +38,19 @@ func (cmd *AddCmd) ApplyFlags() {
 	cmd.Command.Flags().StringVarP(&cmd.Flags.Secret, "secret", "s", "", "BigBlueButton secret")
 	cmd.Command.MarkFlagRequired("secret")
 }
+
+// DeleteFlags contains all Delete command flags
+type DeleteFlags struct {
+	URL string
+}
+
+// NewDeleteFlags initialize a new DeleteFlags object
+func NewDeleteFlags() *DeleteFlags {
+	return &DeleteFlags{}
+}
+
+// ApplyFlags apply command flags to cobra command
+func (cmd *DeleteCmd) ApplyFlags() {
+	cmd.Command.Flags().StringVarP(&cmd.Flags.URL, "url", "u", "", "BigBlueButtin instance url")
+	cmd.Command.MarkFlagRequired("url")
+}
