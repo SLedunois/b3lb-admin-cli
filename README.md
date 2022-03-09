@@ -9,7 +9,7 @@
 
 The b3lbctl command line tool lets you control [b3lb](https://github.com/SLedunois/b3lb) clusters.
 
-For configuration, b3lbctl looks for a file named config in the $HOME/.b3lb.yaml directory. You can specify other b3blconfig files by setting the --config flag.
+For configuration, b3lbctl looks for a file named config in the `$HOME/.b3lb.yaml` directory. You can specify other b3blconfig files by setting the `--config` flag.
 
 ## Installation
 
