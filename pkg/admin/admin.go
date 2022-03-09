@@ -2,6 +2,7 @@ package admin
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -83,11 +84,16 @@ func (a *DefaultAdmin) Add(url string, secret string) error {
 }
 
 // Delete performs a delete admin call on B3LB
+// Delete performs a delete admin call on B3LB
 func (a *DefaultAdmin) Delete(instance string) error {
 	apiURL := fmt.Sprintf(urlFormatter+"?url=%s", *config.URL, url.QueryEscape(instance))
 	resp, restErr := restclient.DeleteWithHeaders(apiURL, authorization())
-	if restErr == nil && resp.StatusCode != http.StatusNoContent {
+	if restErr == nil && resp.StatusCode != http.StatusNoContent && resp.StatusCode != http.StatusNotFound {
 		return fmt.Errorf("api respond with a %d status code instead of %d", resp.StatusCode, http.StatusNoContent)
+	}
+
+	if resp.StatusCode == http.StatusNotFound {
+		return errors.New("instance does not found in your cluster")
 	}
 
 	return restErr

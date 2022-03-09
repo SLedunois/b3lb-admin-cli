@@ -156,7 +156,9 @@ func TestDelete(t *testing.T) {
 			name: "an error returned by the restclient should return an error",
 			mock: func() {
 				restmock.DoFunc = func(req *http.Request) (*http.Response, error) {
-					return nil, errors.New("http error")
+					return &http.Response{
+						StatusCode: http.StatusInternalServerError,
+					}, errors.New("http error")
 				}
 			},
 			validator: func(t *testing.T, instances []api.BigBlueButtonInstance, err error) {
@@ -187,6 +189,19 @@ func TestDelete(t *testing.T) {
 			},
 			validator: func(t *testing.T, instances []api.BigBlueButtonInstance, err error) {
 				assert.Nil(t, err)
+			},
+		},
+		{
+			name: "no error and a 404 http status should return an error",
+			mock: func() {
+				restmock.DoFunc = func(req *http.Request) (*http.Response, error) {
+					return &http.Response{
+						StatusCode: http.StatusNotFound,
+					}, nil
+				}
+			},
+			validator: func(t *testing.T, instances []api.BigBlueButtonInstance, err error) {
+				assert.NotNil(t, err)
 			},
 		},
 	}
