@@ -2,6 +2,7 @@ package admin
 
 import (
 	"encoding/json"
+	"encoding/xml"
 	"errors"
 	"fmt"
 	"io/ioutil"
@@ -9,6 +10,7 @@ import (
 	"net/url"
 
 	"github.com/SLedunois/b3lb/pkg/api"
+	"github.com/SLedunois/b3lb/pkg/balancer"
 	"github.com/SLedunois/b3lb/pkg/restclient"
 	"github.com/SLedunois/b3lbctl/pkg/config"
 )
@@ -23,6 +25,8 @@ type Admin interface {
 	List() ([]api.BigBlueButtonInstance, error)
 	Add(url string, secret string) error
 	Delete(instance string) error
+	ClusterStatus() ([]balancer.InstanceStatus, error)
+	B3lbAPIStatus() (string, error)
 }
 
 // DefaultAdmin is the default admin api struct. It an empty struct
@@ -84,10 +88,13 @@ func (a *DefaultAdmin) Add(url string, secret string) error {
 }
 
 // Delete performs a delete admin call on B3LB
-// Delete performs a delete admin call on B3LB
 func (a *DefaultAdmin) Delete(instance string) error {
 	apiURL := fmt.Sprintf(urlFormatter+"?url=%s", *config.URL, url.QueryEscape(instance))
 	resp, restErr := restclient.DeleteWithHeaders(apiURL, authorization())
+	if restErr != nil {
+		return restErr
+	}
+
 	if restErr == nil && resp.StatusCode != http.StatusNoContent && resp.StatusCode != http.StatusNotFound {
 		return fmt.Errorf("api respond with a %d status code instead of %d", resp.StatusCode, http.StatusNoContent)
 	}
@@ -97,4 +104,48 @@ func (a *DefaultAdmin) Delete(instance string) error {
 	}
 
 	return restErr
+}
+
+// ClusterStatus call cluster status admin api and return result
+func (a *DefaultAdmin) ClusterStatus() ([]balancer.InstanceStatus, error) {
+	resp, err := restclient.GetWithHeaders(fmt.Sprintf("%s/admin/cluster/status", *config.URL), authorization())
+	if err != nil {
+		return nil, err
+	}
+
+	res, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	status := []balancer.InstanceStatus{}
+	if err := json.Unmarshal(res, &status); err != nil {
+		return nil, err
+	}
+
+	return status, nil
+}
+
+// B3lbAPIStatus returns the b3lb pi status
+func (a *DefaultAdmin) B3lbAPIStatus() (string, error) {
+	resp, err := restclient.Get(fmt.Sprintf("%s/bigbluebutton/api", *config.URL))
+	if err != nil {
+		return "", err
+	}
+
+	res, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return "", err
+	}
+
+	status := &api.HealthCheck{}
+	if err := xml.Unmarshal(res, &status); err != nil {
+		return "", err
+	}
+
+	if status.ReturnCode == api.ReturnCodes().Success {
+		return "Up", nil
+	}
+
+	return "Down", nil
 }

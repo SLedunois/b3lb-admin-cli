@@ -7,50 +7,45 @@ import (
 	"testing"
 
 	"github.com/SLedunois/b3lbctl/internal/mock"
+	"github.com/SLedunois/b3lbctl/internal/test"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestDelete(t *testing.T) {
-	type test struct {
-		name      string
-		args      []string
-		mock      func()
-		validator func(t *testing.T, output *bytes.Buffer, err error)
-	}
 
 	mock.InitAdminMock()
 
-	tests := []test{
+	tests := []test.CmdTest{
 		{
-			name: "no url flag should return a cmd error",
-			args: []string{},
-			mock: func() {},
-			validator: func(t *testing.T, output *bytes.Buffer, err error) {
+			Name: "no url flag should return a cmd error",
+			Args: []string{},
+			Mock: func() {},
+			Validator: func(t *testing.T, output *bytes.Buffer, err error) {
 				assert.NotNil(t, err)
 			},
 		},
 		{
-			name: "an error returned by admin api should return a cmd error and log a valid message",
-			args: []string{"--url", "http://localhost"},
-			mock: func() {
+			Name: "an error returned by admin api should return a cmd error and log a valid message",
+			Args: []string{"--url", "http://localhost"},
+			Mock: func() {
 				mock.DeleteAdminFunc = func(url string) error {
 					return errors.New("admin error")
 				}
 			},
-			validator: func(t *testing.T, output *bytes.Buffer, err error) {
+			Validator: func(t *testing.T, output *bytes.Buffer, err error) {
 				assert.NotNil(t, err)
 				assert.Equal(t, "unable to delete http://localhost BigBlueButton instance from your cluster: admin error", err.Error())
 			},
 		},
 		{
-			name: `a valid command should log "instance deleted" message and return no error`,
-			args: []string{"--url", "http://localhost"},
-			mock: func() {
+			Name: `a valid command should log "instance deleted" message and return no error`,
+			Args: []string{"--url", "http://localhost"},
+			Mock: func() {
 				mock.DeleteAdminFunc = func(url string) error {
 					return nil
 				}
 			},
-			validator: func(t *testing.T, output *bytes.Buffer, err error) {
+			Validator: func(t *testing.T, output *bytes.Buffer, err error) {
 				assert.Nil(t, err)
 				out, outErr := ioutil.ReadAll(output)
 				assert.Nil(t, outErr)
@@ -60,14 +55,14 @@ func TestDelete(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		t.Run(test.name, func(t *testing.T) {
-			test.mock()
+		t.Run(test.Name, func(t *testing.T) {
+			test.Mock()
 			b := bytes.NewBufferString("")
 			cmd := NewDeleteCmd()
-			cmd.SetArgs(test.args)
+			cmd.SetArgs(test.Args)
 			cmd.SetOut(b)
 			err := cmd.Execute()
-			test.validator(t, b, err)
+			test.Validator(t, b, err)
 		})
 	}
 }
