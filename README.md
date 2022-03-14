@@ -27,9 +27,10 @@ Usage:
   b3lbctl [command]
 
 Available Commands:
-  completion  Generate the autocompletion script for the specified shell
-  help        Help about any command
-  instances   Manage B3LB instances
+  cluster-info Get overall cluster information
+  completion   Generate the autocompletion script for the specified shell
+  help         Help about any command
+  instances    Manage B3LB instances
 
 Flags:
       --config string   config file (default is $HOME/.b3lb.yaml) (default "$HOME/.b3lb.yaml")

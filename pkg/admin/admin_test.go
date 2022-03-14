@@ -3,12 +3,14 @@ package admin
 import (
 	"bytes"
 	"encoding/json"
+	"encoding/xml"
 	"errors"
 	"io/ioutil"
 	"net/http"
 	"testing"
 
 	"github.com/SLedunois/b3lb/pkg/api"
+	"github.com/SLedunois/b3lb/pkg/balancer"
 	"github.com/SLedunois/b3lb/pkg/restclient"
 	restmock "github.com/SLedunois/b3lb/pkg/restclient/mock"
 	"github.com/SLedunois/b3lbctl/pkg/config"
@@ -21,7 +23,7 @@ var instance = "https://localhost:8090"
 type test struct {
 	name      string
 	mock      func()
-	validator func(t *testing.T, instances []api.BigBlueButtonInstance, err error)
+	validator func(t *testing.T, value interface{}, err error)
 }
 
 func initTests() {
@@ -49,7 +51,7 @@ func TestList(t *testing.T) {
 					return nil, errors.New("http error")
 				}
 			},
-			validator: func(t *testing.T, instances []api.BigBlueButtonInstance, err error) {
+			validator: func(t *testing.T, _ interface{}, err error) {
 				assert.NotNil(t, err)
 			},
 		},
@@ -63,7 +65,7 @@ func TestList(t *testing.T) {
 					}, nil
 				}
 			},
-			validator: func(t *testing.T, instances []api.BigBlueButtonInstance, err error) {
+			validator: func(t *testing.T, _ interface{}, err error) {
 				assert.NotNil(t, err)
 			},
 		},
@@ -82,9 +84,9 @@ func TestList(t *testing.T) {
 					}, nil
 				}
 			},
-			validator: func(t *testing.T, bbb []api.BigBlueButtonInstance, err error) {
+			validator: func(t *testing.T, value interface{}, err error) {
 				assert.Nil(t, err)
-				assert.Equal(t, instances, bbb)
+				assert.Equal(t, instances, value.([]api.BigBlueButtonInstance))
 			},
 		},
 	}
@@ -108,7 +110,7 @@ func TestAdd(t *testing.T) {
 					return &http.Response{}, errors.New("http error")
 				}
 			},
-			validator: func(t *testing.T, instances []api.BigBlueButtonInstance, err error) {
+			validator: func(t *testing.T, _ interface{}, err error) {
 				assert.NotNil(t, err)
 			},
 		},
@@ -121,7 +123,7 @@ func TestAdd(t *testing.T) {
 					}, nil
 				}
 			},
-			validator: func(t *testing.T, instances []api.BigBlueButtonInstance, err error) {
+			validator: func(t *testing.T, _ interface{}, err error) {
 				assert.Nil(t, err)
 			},
 		},
@@ -134,7 +136,7 @@ func TestAdd(t *testing.T) {
 					}, nil
 				}
 			},
-			validator: func(t *testing.T, instances []api.BigBlueButtonInstance, err error) {
+			validator: func(t *testing.T, _ interface{}, err error) {
 				assert.NotNil(t, err)
 			},
 		},
@@ -161,7 +163,7 @@ func TestDelete(t *testing.T) {
 					}, errors.New("http error")
 				}
 			},
-			validator: func(t *testing.T, instances []api.BigBlueButtonInstance, err error) {
+			validator: func(t *testing.T, _ interface{}, err error) {
 				assert.NotNil(t, err)
 			},
 		},
@@ -174,7 +176,7 @@ func TestDelete(t *testing.T) {
 					}, nil
 				}
 			},
-			validator: func(t *testing.T, instances []api.BigBlueButtonInstance, err error) {
+			validator: func(t *testing.T, _ interface{}, err error) {
 				assert.NotNil(t, err)
 			},
 		},
@@ -187,7 +189,7 @@ func TestDelete(t *testing.T) {
 					}, nil
 				}
 			},
-			validator: func(t *testing.T, instances []api.BigBlueButtonInstance, err error) {
+			validator: func(t *testing.T, _ interface{}, err error) {
 				assert.Nil(t, err)
 			},
 		},
@@ -200,7 +202,7 @@ func TestDelete(t *testing.T) {
 					}, nil
 				}
 			},
-			validator: func(t *testing.T, instances []api.BigBlueButtonInstance, err error) {
+			validator: func(t *testing.T, _ interface{}, err error) {
 				assert.NotNil(t, err)
 			},
 		},
@@ -212,5 +214,156 @@ func TestDelete(t *testing.T) {
 			err := API.Delete("http://localhost:8080/bigbluebutton")
 			test.validator(t, nil, err)
 		})
+	}
+}
+
+func TestClusterStatus(t *testing.T) {
+	initTests()
+	bodyStatus := []balancer.InstanceStatus{
+		{
+			Host:               "http://localhost/bigbluebutton",
+			CPU:                2.46,
+			Mem:                66.34,
+			ActiveMeeting:      0,
+			ActiveParticipants: 0,
+			APIStatus:          "Up",
+		},
+	}
+
+	tests := []test{
+		{
+			name: "an error returned by restclient should return an error",
+			mock: func() {
+				restmock.DoFunc = func(req *http.Request) (*http.Response, error) {
+					return nil, errors.New("rest error")
+				}
+			},
+			validator: func(t *testing.T, _ interface{}, err error) {
+				assert.NotNil(t, err)
+			},
+		},
+		{
+			name: "an error thrown by json unmarshaller should return an error",
+			mock: func() {
+				restmock.DoFunc = func(req *http.Request) (*http.Response, error) {
+					return &http.Response{
+						StatusCode: http.StatusOK,
+						Body:       ioutil.NopCloser(bytes.NewReader(nil)),
+					}, nil
+				}
+			},
+			validator: func(t *testing.T, _ interface{}, err error) {
+				assert.NotNil(t, err)
+			},
+		},
+		{
+			name: "a valid response should return a valid response",
+			mock: func() {
+				resp, err := json.Marshal(bodyStatus)
+				if err != nil {
+					panic(err)
+				}
+
+				restmock.DoFunc = func(req *http.Request) (*http.Response, error) {
+					return &http.Response{
+						StatusCode: http.StatusOK,
+						Body:       ioutil.NopCloser(bytes.NewReader(resp)),
+					}, nil
+				}
+			},
+			validator: func(t *testing.T, value interface{}, err error) {
+				assert.Nil(t, err)
+				assert.Equal(t, bodyStatus, value.([]balancer.InstanceStatus))
+			},
+		},
+	}
+
+	for _, test := range tests {
+		test.mock()
+		status, err := API.ClusterStatus()
+		test.validator(t, status, err)
+	}
+}
+
+func TestB3lbAPIStatus(t *testing.T) {
+	initTests()
+	check := api.CreateHealthCheck()
+
+	tests := []test{
+		{
+			name: "an error returned by restclient should be returned and an empty string",
+			mock: func() {
+				restmock.DoFunc = func(req *http.Request) (*http.Response, error) {
+					return nil, errors.New("rest error")
+				}
+			},
+			validator: func(t *testing.T, value interface{}, err error) {
+				assert.NotNil(t, err)
+				assert.Equal(t, "", value.(string))
+			},
+		},
+		{
+			name: "an error returned by xml unmarshaller should return an error and an empty string",
+			mock: func() {
+				restmock.DoFunc = func(req *http.Request) (*http.Response, error) {
+					return &http.Response{
+						StatusCode: http.StatusOK,
+						Body:       ioutil.NopCloser(bytes.NewReader(nil)),
+					}, nil
+				}
+			},
+			validator: func(t *testing.T, value interface{}, err error) {
+				assert.NotNil(t, err)
+				assert.Equal(t, "", value.(string))
+			},
+		},
+		{
+			name: `a failed status code should return a "Down" status`,
+			mock: func() {
+				check.ReturnCode = api.ReturnCodes().Failed
+				value, err := xml.Marshal(check)
+				if err != nil {
+					panic(err)
+				}
+
+				restmock.DoFunc = func(req *http.Request) (*http.Response, error) {
+					return &http.Response{
+						StatusCode: http.StatusOK,
+						Body: ioutil.NopCloser(bytes.NewReader(value)),
+					}, nil
+				}
+			},
+			validator: func(t *testing.T, value interface{}, err error) {
+				assert.Nil(t, err)
+				assert.Equal(t, "Down", value.(string))
+			},
+		},
+		{
+			name: `a success status code should return a "Up" status`,
+			mock: func() {
+				check.ReturnCode = api.ReturnCodes().Success
+				value, err := xml.Marshal(check)
+				if err != nil {
+					panic(err)
+				}
+
+				restmock.DoFunc = func(req *http.Request) (*http.Response, error) {
+					return &http.Response{
+						StatusCode: http.StatusOK,
+						Body: ioutil.NopCloser(bytes.NewReader(value)),
+					}, nil
+				}
+			},
+			validator: func(t *testing.T, value interface{}, err error) {
+				assert.Nil(t, err)
+				assert.Equal(t, "Up", value.(string))
+			},
+		},
+	}
+
+	for _, test := range tests {
+		test.mock()
+		status, err := API.B3lbAPIStatus()
+		test.validator(t, status, err)
 	}
 }

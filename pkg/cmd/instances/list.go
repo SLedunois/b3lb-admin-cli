@@ -5,6 +5,7 @@ import (
 
 	"github.com/SLedunois/b3lb/pkg/api"
 	"github.com/SLedunois/b3lbctl/pkg/admin"
+	"github.com/SLedunois/b3lbctl/pkg/render"
 	"github.com/jedib0t/go-pretty/v6/table"
 	"github.com/jedib0t/go-pretty/v6/text"
 	"github.com/spf13/cobra"
@@ -59,7 +60,7 @@ func renderTable(cmd *cobra.Command, instances []api.BigBlueButtonInstance, csv 
 		t.AppendRow(table.Row{instance.URL, instance.Secret})
 	}
 
-	t.SetStyle(tableStyle())
+	t.SetStyle(render.TableStyle())
 	if csv {
 		cmd.Println(t.RenderCSV())
 	} else {
@@ -69,38 +70,4 @@ func renderTable(cmd *cobra.Command, instances []api.BigBlueButtonInstance, csv 
 
 func renderJSON(cmd *cobra.Command, instances []api.BigBlueButtonInstance) {
 	cmd.Println(text.NewJSONTransformer("", "  ")(instances))
-}
-
-func tableStyle() table.Style {
-	return table.Style{
-		Name: "Docker style",
-		Box: table.BoxStyle{
-			BottomLeft:       "",
-			BottomRight:      "",
-			BottomSeparator:  "",
-			Left:             "",
-			LeftSeparator:    "",
-			MiddleHorizontal: "",
-			MiddleSeparator:  "",
-			MiddleVertical:   "",
-			PaddingLeft:      "",
-			PaddingRight:     "  ",
-			Right:            "",
-			RightSeparator:   "",
-			TopLeft:          "",
-			TopRight:         "",
-			TopSeparator:     "",
-			UnfinishedRow:    "",
-		},
-		Format: table.FormatOptions{
-			Header: text.FormatTitle,
-		},
-		Options: table.Options{
-			DrawBorder:      false,
-			SeparateColumns: false,
-			SeparateFooter:  false,
-			SeparateHeader:  false,
-			SeparateRows:    false,
-		},
-	}
 }
