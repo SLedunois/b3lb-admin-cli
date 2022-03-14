@@ -37,7 +37,11 @@ func NewCmd() *cobra.Command {
 			Use:   "b3lbctl <command> [flags]",
 			Short: "B3LB controller cli",
 			Long:  `Manage your B3LB cluster from the command line`,
-			Run:   func(cmd *cobra.Command, args []string) {},
+			Run: func(cmd *cobra.Command, args []string) {
+				if len(args) == 0 {
+					cmd.Help()
+				}
+			},
 		},
 		Flags: NewRootFlags(),
 	}
