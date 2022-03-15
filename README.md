@@ -29,6 +29,7 @@ Usage:
 Available Commands:
   cluster-info Get overall cluster information
   completion   Generate the autocompletion script for the specified shell
+  config       Manage B3LB config file using subcommands.
   help         Help about any command
   instances    Manage B3LB instances
 

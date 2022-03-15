@@ -18,6 +18,9 @@ var APIKey *string
 // URL is the admin url configuration found in configuration file
 var URL *string
 
+// Path is the direct path for configuration file
+var Path *string
+
 // Init initialize config and expose it through Config variable
 func Init(path string) error {
 	if path == defaultConfigPath {
@@ -34,6 +37,7 @@ func Init(path string) error {
 		return fmt.Errorf("unable to load configuration: %s", err.Error())
 	}
 
+	Path = &path
 	APIKey = &c.Admin.APIKey
 	URL = &c.Admin.URL
 
