@@ -108,7 +108,7 @@ func (a *DefaultAdmin) Delete(instance string) error {
 
 // ClusterStatus call cluster status admin api and return result
 func (a *DefaultAdmin) ClusterStatus() ([]balancer.InstanceStatus, error) {
-	resp, err := restclient.GetWithHeaders(fmt.Sprintf("%s/admin/cluster/status", *config.URL), authorization())
+	resp, err := restclient.GetWithHeaders(fmt.Sprintf("%s/admin/api/cluster", *config.URL), authorization())
 	if err != nil {
 		return nil, err
 	}
