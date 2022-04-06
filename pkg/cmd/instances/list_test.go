@@ -8,7 +8,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/SLedunois/b3lb/pkg/api"
+	"github.com/SLedunois/b3lb/v2/pkg/api"
 	"github.com/SLedunois/b3lbctl/internal/mock"
 	"github.com/SLedunois/b3lbctl/internal/test"
 	"github.com/jedib0t/go-pretty/v6/text"

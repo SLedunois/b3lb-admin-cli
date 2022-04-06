@@ -20,7 +20,7 @@ func TestRootCmd(t *testing.T) {
 			args: []string{"--config", "../../../test/config.yml"},
 			validator: func(t *testing.T, err error) {
 				assert.Equal(t, "b3lb_admin_api_key", config.APIKey)
-				assert.Equal(t, "http://localhost:8090", config.URL)
+				assert.Equal(t, "http://localhost:8090", config.B3LB)
 			},
 		},
 	}

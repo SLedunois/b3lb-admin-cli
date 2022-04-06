@@ -9,9 +9,9 @@ import (
 	"net/http"
 	"net/url"
 
-	"github.com/SLedunois/b3lb/pkg/api"
-	"github.com/SLedunois/b3lb/pkg/balancer"
-	"github.com/SLedunois/b3lb/pkg/restclient"
+	"github.com/SLedunois/b3lb/v2/pkg/api"
+	"github.com/SLedunois/b3lb/v2/pkg/balancer"
+	"github.com/SLedunois/b3lb/v2/pkg/restclient"
 	"github.com/SLedunois/b3lbctl/pkg/config"
 )
 
@@ -45,7 +45,7 @@ func authorization() map[string]string {
 
 // List performs a list admin call on b3lb
 func (a *DefaultAdmin) List() ([]api.BigBlueButtonInstance, error) {
-	url := fmt.Sprintf(urlFormatter, *config.URL)
+	url := fmt.Sprintf(urlFormatter, *config.B3LB)
 	resp, err := restclient.GetWithHeaders(url, authorization())
 	if err != nil {
 		return nil, err
@@ -66,7 +66,7 @@ func (a *DefaultAdmin) List() ([]api.BigBlueButtonInstance, error) {
 
 // Add performs a add admin call on b3lb
 func (a *DefaultAdmin) Add(url string, secret string) error {
-	apiURL := fmt.Sprintf(urlFormatter, *config.URL)
+	apiURL := fmt.Sprintf(urlFormatter, *config.B3LB)
 	instance := api.BigBlueButtonInstance{
 		URL:    url,
 		Secret: secret,
@@ -89,7 +89,7 @@ func (a *DefaultAdmin) Add(url string, secret string) error {
 
 // Delete performs a delete admin call on B3LB
 func (a *DefaultAdmin) Delete(instance string) error {
-	apiURL := fmt.Sprintf(urlFormatter+"?url=%s", *config.URL, url.QueryEscape(instance))
+	apiURL := fmt.Sprintf(urlFormatter+"?url=%s", *config.B3LB, url.QueryEscape(instance))
 	resp, restErr := restclient.DeleteWithHeaders(apiURL, authorization())
 	if restErr != nil {
 		return restErr
@@ -108,7 +108,7 @@ func (a *DefaultAdmin) Delete(instance string) error {
 
 // ClusterStatus call cluster status admin api and return result
 func (a *DefaultAdmin) ClusterStatus() ([]balancer.InstanceStatus, error) {
-	resp, err := restclient.GetWithHeaders(fmt.Sprintf("%s/admin/api/cluster", *config.URL), authorization())
+	resp, err := restclient.GetWithHeaders(fmt.Sprintf("%s/admin/api/cluster", *config.B3LB), authorization())
 	if err != nil {
 		return nil, err
 	}
@@ -128,7 +128,7 @@ func (a *DefaultAdmin) ClusterStatus() ([]balancer.InstanceStatus, error) {
 
 // B3lbAPIStatus returns the b3lb pi status
 func (a *DefaultAdmin) B3lbAPIStatus() (string, error) {
-	resp, err := restclient.Get(fmt.Sprintf("%s/bigbluebutton/api", *config.URL))
+	resp, err := restclient.Get(fmt.Sprintf("%s/bigbluebutton/api", *config.B3LB))
 	if err != nil {
 		return "", err
 	}

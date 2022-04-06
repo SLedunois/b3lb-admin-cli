@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/SLedunois/b3lb/pkg/restclient"
+	"github.com/SLedunois/b3lb/v2/pkg/restclient"
 	"github.com/SLedunois/b3lbctl/pkg/admin"
 	"github.com/SLedunois/b3lbctl/pkg/cmd/clusterinfo"
 	configcmd "github.com/SLedunois/b3lbctl/pkg/cmd/config"

@@ -2,21 +2,23 @@ package config
 
 import (
 	"fmt"
+	"io/ioutil"
 	"os"
 	"path/filepath"
 
-	"github.com/SLedunois/b3lb/pkg/config"
+	"github.com/SLedunois/b3lb/v2/pkg/config"
+	"gopkg.in/yaml.v2"
 )
 
-const defaultConfigFileName = ".b3lb.yaml"
+const defaultConfigFileName = ".b3lbctl.yml"
 
-var defaultConfigPath = fmt.Sprintf("$HOME/%s", defaultConfigFileName)
+var defaultConfigPath = fmt.Sprintf("%s/%s", config.DefaultConfigFolder, defaultConfigFileName)
 
 // APIKey is the admin API key configuration found in configuration file
 var APIKey *string
 
 // URL is the admin url configuration found in configuration file
-var URL *string
+var B3LB *string
 
 // Path is the direct path for configuration file
 var Path *string
@@ -29,19 +31,45 @@ func Init(path string) error {
 			return err
 		}
 
-		path = filepath.Join(homeDir, defaultConfigFileName)
+		path = filepath.Join(homeDir, ".b3lb", defaultConfigFileName)
 	}
 
-	c, err := config.Load(path)
+	c, err := load(path)
 	if err != nil {
 		return fmt.Errorf("unable to load configuration: %s", err.Error())
 	}
 
+	B3LB = &c.B3lb
+	APIKey = &c.APIKey
 	Path = &path
-	APIKey = &c.Admin.APIKey
-	URL = &c.Admin.URL
 
 	return nil
+}
+
+func load(path string) (*Config, error) {
+	file, err := os.Open(path)
+	if err != nil {
+		return nil, err
+	}
+
+	defer func() {
+		if err := file.Close(); err != nil {
+			fmt.Println(fmt.Sprintf("unable to close config file: %s", err))
+		}
+	}()
+
+	conf := &Config{}
+
+	b, err := ioutil.ReadAll(file)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := yaml.Unmarshal(b, &conf); err != nil {
+		return nil, err
+	}
+
+	return conf, nil
 }
 
 // DefaultConfigPath returns the default config file path
