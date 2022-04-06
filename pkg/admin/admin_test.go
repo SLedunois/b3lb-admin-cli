@@ -9,10 +9,9 @@ import (
 	"net/http"
 	"testing"
 
-	"github.com/SLedunois/b3lb/pkg/api"
-	"github.com/SLedunois/b3lb/pkg/balancer"
-	"github.com/SLedunois/b3lb/pkg/restclient"
-	restmock "github.com/SLedunois/b3lb/pkg/restclient/mock"
+	"github.com/SLedunois/b3lb/v2/pkg/api"
+	"github.com/SLedunois/b3lb/v2/pkg/balancer"
+	"github.com/SLedunois/b3lb/v2/pkg/restclient"
 	"github.com/SLedunois/b3lbctl/pkg/config"
 	"github.com/stretchr/testify/assert"
 )
@@ -29,8 +28,8 @@ type test struct {
 func initTests() {
 	Init()
 	config.APIKey = &apiKey
-	config.URL = &instance
-	restclient.Client = &restmock.RestClient{}
+	config.B3LB = &instance
+	restclient.Client = &restclient.Mock{}
 
 }
 
@@ -47,7 +46,7 @@ func TestList(t *testing.T) {
 		{
 			name: "an error thrown by restclient should return an error",
 			mock: func() {
-				restmock.DoFunc = func(req *http.Request) (*http.Response, error) {
+				restclient.RestClientMockDoFunc = func(req *http.Request) (*http.Response, error) {
 					return nil, errors.New("http error")
 				}
 			},
@@ -58,7 +57,7 @@ func TestList(t *testing.T) {
 		{
 			name: "an error thrown by json unmarshaller should return an error",
 			mock: func() {
-				restmock.DoFunc = func(req *http.Request) (*http.Response, error) {
+				restclient.RestClientMockDoFunc = func(req *http.Request) (*http.Response, error) {
 					return &http.Response{
 						StatusCode: http.StatusOK,
 						Body:       ioutil.NopCloser(bytes.NewReader(nil)),
@@ -77,7 +76,7 @@ func TestList(t *testing.T) {
 					panic(err)
 				}
 
-				restmock.DoFunc = func(req *http.Request) (*http.Response, error) {
+				restclient.RestClientMockDoFunc = func(req *http.Request) (*http.Response, error) {
 					return &http.Response{
 						StatusCode: http.StatusOK,
 						Body:       ioutil.NopCloser(bytes.NewReader(resp)),
@@ -106,7 +105,7 @@ func TestAdd(t *testing.T) {
 		{
 			name: "add method should return an error if restclient return one",
 			mock: func() {
-				restmock.DoFunc = func(req *http.Request) (*http.Response, error) {
+				restclient.RestClientMockDoFunc = func(req *http.Request) (*http.Response, error) {
 					return &http.Response{}, errors.New("http error")
 				}
 			},
@@ -117,7 +116,7 @@ func TestAdd(t *testing.T) {
 		{
 			name: "add method should not return an error if restclient return a valid response",
 			mock: func() {
-				restmock.DoFunc = func(req *http.Request) (*http.Response, error) {
+				restclient.RestClientMockDoFunc = func(req *http.Request) (*http.Response, error) {
 					return &http.Response{
 						StatusCode: http.StatusCreated,
 					}, nil
@@ -130,7 +129,7 @@ func TestAdd(t *testing.T) {
 		{
 			name: "add method should return an error if restclient does not return a 201 - HTTP Created - status response",
 			mock: func() {
-				restmock.DoFunc = func(req *http.Request) (*http.Response, error) {
+				restclient.RestClientMockDoFunc = func(req *http.Request) (*http.Response, error) {
 					return &http.Response{
 						StatusCode: http.StatusInternalServerError,
 					}, nil
@@ -157,7 +156,7 @@ func TestDelete(t *testing.T) {
 		{
 			name: "an error returned by the restclient should return an error",
 			mock: func() {
-				restmock.DoFunc = func(req *http.Request) (*http.Response, error) {
+				restclient.RestClientMockDoFunc = func(req *http.Request) (*http.Response, error) {
 					return &http.Response{
 						StatusCode: http.StatusInternalServerError,
 					}, errors.New("http error")
@@ -170,7 +169,7 @@ func TestDelete(t *testing.T) {
 		{
 			name: "no error returned by the restclient but an http code != 204 should return an error",
 			mock: func() {
-				restmock.DoFunc = func(req *http.Request) (*http.Response, error) {
+				restclient.RestClientMockDoFunc = func(req *http.Request) (*http.Response, error) {
 					return &http.Response{
 						StatusCode: http.StatusInternalServerError,
 					}, nil
@@ -183,7 +182,7 @@ func TestDelete(t *testing.T) {
 		{
 			name: "no error and a 204 http status should return no error",
 			mock: func() {
-				restmock.DoFunc = func(req *http.Request) (*http.Response, error) {
+				restclient.RestClientMockDoFunc = func(req *http.Request) (*http.Response, error) {
 					return &http.Response{
 						StatusCode: http.StatusNoContent,
 					}, nil
@@ -196,7 +195,7 @@ func TestDelete(t *testing.T) {
 		{
 			name: "no error and a 404 http status should return an error",
 			mock: func() {
-				restmock.DoFunc = func(req *http.Request) (*http.Response, error) {
+				restclient.RestClientMockDoFunc = func(req *http.Request) (*http.Response, error) {
 					return &http.Response{
 						StatusCode: http.StatusNotFound,
 					}, nil
@@ -234,7 +233,7 @@ func TestClusterStatus(t *testing.T) {
 		{
 			name: "an error returned by restclient should return an error",
 			mock: func() {
-				restmock.DoFunc = func(req *http.Request) (*http.Response, error) {
+				restclient.RestClientMockDoFunc = func(req *http.Request) (*http.Response, error) {
 					return nil, errors.New("rest error")
 				}
 			},
@@ -245,7 +244,7 @@ func TestClusterStatus(t *testing.T) {
 		{
 			name: "an error thrown by json unmarshaller should return an error",
 			mock: func() {
-				restmock.DoFunc = func(req *http.Request) (*http.Response, error) {
+				restclient.RestClientMockDoFunc = func(req *http.Request) (*http.Response, error) {
 					return &http.Response{
 						StatusCode: http.StatusOK,
 						Body:       ioutil.NopCloser(bytes.NewReader(nil)),
@@ -264,7 +263,7 @@ func TestClusterStatus(t *testing.T) {
 					panic(err)
 				}
 
-				restmock.DoFunc = func(req *http.Request) (*http.Response, error) {
+				restclient.RestClientMockDoFunc = func(req *http.Request) (*http.Response, error) {
 					return &http.Response{
 						StatusCode: http.StatusOK,
 						Body:       ioutil.NopCloser(bytes.NewReader(resp)),
@@ -293,7 +292,7 @@ func TestB3lbAPIStatus(t *testing.T) {
 		{
 			name: "an error returned by restclient should be returned and an empty string",
 			mock: func() {
-				restmock.DoFunc = func(req *http.Request) (*http.Response, error) {
+				restclient.RestClientMockDoFunc = func(req *http.Request) (*http.Response, error) {
 					return nil, errors.New("rest error")
 				}
 			},
@@ -305,7 +304,7 @@ func TestB3lbAPIStatus(t *testing.T) {
 		{
 			name: "an error returned by xml unmarshaller should return an error and an empty string",
 			mock: func() {
-				restmock.DoFunc = func(req *http.Request) (*http.Response, error) {
+				restclient.RestClientMockDoFunc = func(req *http.Request) (*http.Response, error) {
 					return &http.Response{
 						StatusCode: http.StatusOK,
 						Body:       ioutil.NopCloser(bytes.NewReader(nil)),
@@ -326,10 +325,10 @@ func TestB3lbAPIStatus(t *testing.T) {
 					panic(err)
 				}
 
-				restmock.DoFunc = func(req *http.Request) (*http.Response, error) {
+				restclient.RestClientMockDoFunc = func(req *http.Request) (*http.Response, error) {
 					return &http.Response{
 						StatusCode: http.StatusOK,
-						Body: ioutil.NopCloser(bytes.NewReader(value)),
+						Body:       ioutil.NopCloser(bytes.NewReader(value)),
 					}, nil
 				}
 			},
@@ -347,10 +346,10 @@ func TestB3lbAPIStatus(t *testing.T) {
 					panic(err)
 				}
 
-				restmock.DoFunc = func(req *http.Request) (*http.Response, error) {
+				restclient.RestClientMockDoFunc = func(req *http.Request) (*http.Response, error) {
 					return &http.Response{
 						StatusCode: http.StatusOK,
-						Body: ioutil.NopCloser(bytes.NewReader(value)),
+						Body:       ioutil.NopCloser(bytes.NewReader(value)),
 					}, nil
 				}
 			},

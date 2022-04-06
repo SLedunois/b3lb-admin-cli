@@ -3,7 +3,7 @@ package instances
 import (
 	"fmt"
 
-	"github.com/SLedunois/b3lb/pkg/api"
+	"github.com/SLedunois/b3lb/v2/pkg/api"
 	"github.com/SLedunois/b3lbctl/pkg/admin"
 	"github.com/SLedunois/b3lbctl/pkg/render"
 	"github.com/jedib0t/go-pretty/v6/table"

@@ -1,8 +1,8 @@
 package mock
 
 import (
-	"github.com/SLedunois/b3lb/pkg/api"
-	"github.com/SLedunois/b3lb/pkg/balancer"
+	"github.com/SLedunois/b3lb/v2/pkg/api"
+	"github.com/SLedunois/b3lb/v2/pkg/balancer"
 	"github.com/SLedunois/b3lbctl/pkg/admin"
 )
 
