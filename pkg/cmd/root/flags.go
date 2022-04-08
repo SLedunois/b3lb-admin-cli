@@ -19,7 +19,9 @@ func NewRootFlags() *Flags {
 
 // ApplyFlags apply RootFlags to provided command
 func (cmd *RootCmd) ApplyFlags() {
-	cmd.Command.PersistentFlags().StringVar(&cmd.Flags.ConfigPath, "config", config.DefaultConfigPath(), fmt.Sprintf("config file (default is %s)", config.DefaultConfigPath()))
-	cmd.Command.MarkFlagRequired("config")
-	viper.BindPFlag("config", cmd.Command.PersistentFlags().Lookup("config"))
+	if !IsInitCommand() {
+		cmd.Command.PersistentFlags().StringVar(&cmd.Flags.ConfigPath, "config", config.DefaultConfigPath(), fmt.Sprintf("config file (default is %s)", config.DefaultConfigPath()))
+		cmd.Command.MarkFlagRequired("config")
+		viper.BindPFlag("config", cmd.Command.PersistentFlags().Lookup("config"))
+	}
 }

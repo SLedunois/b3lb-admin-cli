@@ -10,9 +10,10 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
-const defaultConfigFileName = ".b3lbctl.yml"
+// DefaultConfigFileName is the default config file name
+const DefaultConfigFileName = ".b3lbctl.yml"
 
-var defaultConfigPath = fmt.Sprintf("%s/%s", config.DefaultConfigFolder, defaultConfigFileName)
+var defaultConfigPath = fmt.Sprintf("%s/%s", config.DefaultConfigFolder, DefaultConfigFileName)
 
 // APIKey is the admin API key configuration found in configuration file
 var APIKey *string
@@ -31,7 +32,7 @@ func Init(path string) error {
 			return err
 		}
 
-		path = filepath.Join(homeDir, ".b3lb", defaultConfigFileName)
+		path = filepath.Join(homeDir, ".b3lb", DefaultConfigFileName)
 	}
 
 	c, err := load(path)
