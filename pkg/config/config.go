@@ -18,7 +18,7 @@ var defaultConfigPath = fmt.Sprintf("%s/%s", config.DefaultConfigFolder, Default
 // APIKey is the admin API key configuration found in configuration file
 var APIKey *string
 
-// URL is the admin url configuration found in configuration file
+// B3LB is the admin url configuration found in configuration file
 var B3LB *string
 
 // Path is the direct path for configuration file
