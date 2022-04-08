@@ -3,11 +3,13 @@ package root
 import (
 	"fmt"
 	"os"
+	"strings"
 
 	"github.com/SLedunois/b3lb/v2/pkg/restclient"
 	"github.com/SLedunois/b3lbctl/pkg/admin"
 	"github.com/SLedunois/b3lbctl/pkg/cmd/clusterinfo"
 	configcmd "github.com/SLedunois/b3lbctl/pkg/cmd/config"
+	initcmd "github.com/SLedunois/b3lbctl/pkg/cmd/init"
 	"github.com/SLedunois/b3lbctl/pkg/cmd/instances"
 	"github.com/SLedunois/b3lbctl/pkg/config"
 	"github.com/SLedunois/b3lbctl/pkg/system"
@@ -21,15 +23,22 @@ type RootCmd struct {
 	Flags   *Flags
 }
 
+// IsInitCommand returns true if the command is `b3lbctl init config`
+func IsInitCommand() bool {
+	return strings.Contains(strings.Join(os.Args, ""), "init")
+}
+
 // NewCmd initialize the root command
 func NewCmd() *cobra.Command {
 	cobra.OnInitialize(func() {
 		restclient.Init()
 		admin.Init()
-		err := config.Init(viper.GetString("config"))
-		if err != nil {
-			fmt.Println(err)
-			os.Exit(system.NoSuchFileOrDirectoryExitCode)
+		if !IsInitCommand() {
+			err := config.Init(viper.GetString("config"))
+			if err != nil {
+				fmt.Println(err)
+				os.Exit(system.NoSuchFileOrDirectoryExitCode)
+			}
 		}
 	})
 
@@ -52,6 +61,7 @@ func NewCmd() *cobra.Command {
 	cmd.Command.AddCommand(instances.NewCmd())
 	cmd.Command.AddCommand(clusterinfo.NewCmd())
 	cmd.Command.AddCommand(configcmd.NewCmd())
+	cmd.Command.AddCommand(initcmd.NewCmd())
 
 	return cmd.Command
 }
