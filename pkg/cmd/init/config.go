@@ -13,11 +13,13 @@ import (
 
 const fsRights = 0755
 
+// InitConfigCmd represents the `b3lbctl init config` command
 type InitConfigCmd struct {
 	Command *cobra.Command
-	Flags   *InitConfigFlags
+	Flags   *ConfigFlags
 }
 
+// NewInitConfigCmd initialize a new InitConfigCmd struct
 func NewInitConfigCmd() *cobra.Command {
 	cmd := &InitConfigCmd{
 		Command: &cobra.Command{
@@ -31,31 +33,23 @@ func NewInitConfigCmd() *cobra.Command {
 	cmd.ApplyFlags()
 
 	cmd.Command.RunE = cmd.init
+	cmd.Command.PreRunE = cmd.prerun
 
 	return cmd.Command
 }
 
+// ApplyFlags apply command flags to InitConfigCmd
 func (cmd *InitConfigCmd) ApplyFlags() {
 	cmd.Command.Flags().StringVarP(&cmd.Flags.B3LB, "b3lb", "b", "", "B3lb url")
 	cmd.Command.Flags().StringVarP(&cmd.Flags.APIKey, "key", "k", "", "B3lb admin api key")
-	cmd.Command.Flags().StringVarP(&cmd.Flags.Destination, "destination", "d", b3lbconfig.DefaultConfigFolder, "Configuration file folder destination")
+	cmd.Command.Flags().StringVarP(&cmd.Flags.Destination, "dest", "d", b3lbconfig.DefaultConfigFolder, "Configuration file folder destination")
 }
 
 func (cmd *InitConfigCmd) init(command *cobra.Command, args []string) error {
-	cmd.Command.SilenceUsage = true
 	dest := cmd.Flags.Destination
-	if dest == b3lbconfig.DefaultConfigFolder {
-		formalized, err := formalizeDefaultConfigFolder()
-		if err != nil {
-			return fmt.Errorf("unable to initialize configuration: %s", err.Error())
-		}
-
-		dest = formalized
-	}
-
 	filePath := path.Join(dest, config.DefaultConfigFileName)
 
-	if info, _ := os.Stat(filePath); info != nil {
+	if fileAlreadyExists(filePath) {
 		return fmt.Errorf("configuration already exists, see %s", filePath)
 	}
 
@@ -70,7 +64,7 @@ func (cmd *InitConfigCmd) init(command *cobra.Command, args []string) error {
 
 	content, err := yaml.Marshal(conf)
 	if err != nil {
-		return fmt.Errorf("unable to marshal yaml configuation: %s", err.Error())
+		return fmt.Errorf("unable to marshal yaml configuration: %s", err.Error())
 	}
 
 	if err := os.WriteFile(path.Join(dest, config.DefaultConfigFileName), content, fsRights); err != nil {
@@ -80,11 +74,13 @@ func (cmd *InitConfigCmd) init(command *cobra.Command, args []string) error {
 	return nil
 }
 
-func formalizeDefaultConfigFolder() (string, error) {
-	home, err := os.UserHomeDir()
-	if err != nil {
-		return "", err
+func (cmd *InitConfigCmd) prerun(command *cobra.Command, args []string) error {
+	cmd.Command.SilenceUsage = true
+	dest, err := processDestination(cmd.Flags.Destination)
+	if err == nil {
+		cmd.Flags.Destination = dest
+		return nil
 	}
 
-	return path.Join(home, ".b3lb"), nil
+	return err
 }

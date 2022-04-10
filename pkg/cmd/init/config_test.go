@@ -20,11 +20,11 @@ func TestInitConfig(t *testing.T) {
 		return
 	}
 
-	os.Remove(fmt.Sprintf("%s/.b3lb/.b3lbctl.yml", homedir))
+	os.Remove(fmt.Sprintf("%s/.b3lb", homedir))
 
 	tests := []test.CmdTest{
 		{
-			Name: "a valid request should init configuration with parameters",
+			Name: "a valid command should init configuration with parameters",
 			Mock: func() {},
 			Args: []string{"-b", "http://localhost:8090", "-k", "api_key"},
 			Validator: func(t *testing.T, output *bytes.Buffer, err error) {
