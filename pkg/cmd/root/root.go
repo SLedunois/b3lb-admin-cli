@@ -8,7 +8,7 @@ import (
 	"github.com/SLedunois/b3lb/v2/pkg/restclient"
 	"github.com/SLedunois/b3lbctl/pkg/admin"
 	"github.com/SLedunois/b3lbctl/pkg/cmd/clusterinfo"
-	configcmd "github.com/SLedunois/b3lbctl/pkg/cmd/config"
+	configcmd "github.com/SLedunois/b3lbctl/pkg/cmd/describe"
 	initcmd "github.com/SLedunois/b3lbctl/pkg/cmd/init"
 	"github.com/SLedunois/b3lbctl/pkg/cmd/instances"
 	"github.com/SLedunois/b3lbctl/pkg/config"

@@ -11,6 +11,7 @@ import (
 
 	"github.com/SLedunois/b3lb/v2/pkg/api"
 	"github.com/SLedunois/b3lb/v2/pkg/balancer"
+	b3lbconfig "github.com/SLedunois/b3lb/v2/pkg/config"
 	"github.com/SLedunois/b3lb/v2/pkg/restclient"
 	"github.com/SLedunois/b3lbctl/pkg/config"
 )
@@ -27,6 +28,7 @@ type Admin interface {
 	Delete(instance string) error
 	ClusterStatus() ([]balancer.InstanceStatus, error)
 	B3lbAPIStatus() (string, error)
+	GetConfiguration() (*b3lbconfig.Config, error)
 }
 
 // DefaultAdmin is the default admin api struct. It an empty struct
@@ -148,4 +150,24 @@ func (a *DefaultAdmin) B3lbAPIStatus() (string, error) {
 	}
 
 	return "Down", nil
+}
+
+// GetConfiguration return b3lb configuration
+func (a *DefaultAdmin) GetConfiguration() (*b3lbconfig.Config, error) {
+	resp, err := restclient.GetWithHeaders(fmt.Sprintf("%s/admin/api/configurations", *config.B3LB), authorization())
+	if err != nil {
+		return nil, err
+	}
+
+	res, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	var config *b3lbconfig.Config
+	if err := json.Unmarshal(res, &config); err != nil {
+		return nil, err
+	}
+
+	return config, nil
 }

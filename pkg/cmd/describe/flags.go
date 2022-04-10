@@ -1,4 +1,4 @@
-package config
+package describe
 
 // Flags contains all config command flags
 type Flags struct{}

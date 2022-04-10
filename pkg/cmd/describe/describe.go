@@ -1,4 +1,4 @@
-package config
+package describe
 
 import "github.com/spf13/cobra"
 
@@ -13,9 +13,9 @@ func NewCmd() *cobra.Command {
 	cmd := &Cmd{
 		Flags: NewFlags(),
 		Command: &cobra.Command{
-			Use:   "config <command> [flags]",
-			Short: "Manage B3LB config file using subcommands.",
-			Long:  `Manage B3LB config file using subcommands.`,
+			Use:   "describe <command> [flags]",
+			Short: "Show details of a specific resource or group of resources",
+			Long:  `Show details of a specific resource or group of resources`,
 			Run: func(cmd *cobra.Command, args []string) {
 				if len(args) == 0 {
 					cmd.Help()
@@ -24,7 +24,7 @@ func NewCmd() *cobra.Command {
 		},
 	}
 
-	cmd.Command.AddCommand(NewViewCmd())
+	cmd.Command.AddCommand(NewConfigCmd())
 
 	return cmd.Command
 }
