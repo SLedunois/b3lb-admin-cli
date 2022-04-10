@@ -19,7 +19,7 @@ type InstancesCmd struct {
 	Flags   *InstancesFlags
 }
 
-// NewInitInstancesCmd initialize a new InitInstancesCmd
+// NewInitInstancesCmd initialize a new InstancesCmd
 func NewInitInstancesCmd() *cobra.Command {
 	cmd := &InstancesCmd{
 		Command: &cobra.Command{

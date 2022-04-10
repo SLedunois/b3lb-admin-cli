@@ -18,6 +18,7 @@ func NewCmd() *cobra.Command {
 
 	cmd.AddCommand(NewInitConfigCmd())
 	cmd.AddCommand(NewInitInstancesCmd())
+	cmd.AddCommand(NewInitTenantCmd())
 
 	return cmd
 }
