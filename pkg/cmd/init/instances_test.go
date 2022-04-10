@@ -24,7 +24,6 @@ func TestInitInstances(t *testing.T) {
 	tests := []test.CmdTest{
 		{
 			Name: "a valid command should init instances configuration file",
-			Mock: func() {},
 			Args: []string{},
 			Validator: func(t *testing.T, output *bytes.Buffer, err error) {
 				file := fmt.Sprintf("%s/.b3lb/instances.yml", homedir)
@@ -46,7 +45,6 @@ func TestInitInstances(t *testing.T) {
 		},
 		{
 			Name: "an existing file should return an error",
-			Mock: func() {},
 			Args: []string{},
 			Validator: func(t *testing.T, output *bytes.Buffer, err error) {
 				assert.NotNil(t, err)
@@ -61,7 +59,6 @@ func TestInitInstances(t *testing.T) {
 			cmd := NewInitInstancesCmd()
 			cmd.SetArgs(test.Args)
 			cmd.SetOut(b)
-			test.Mock()
 			err := cmd.Execute()
 			test.Validator(t, b, err)
 		})

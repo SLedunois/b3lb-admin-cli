@@ -7,7 +7,7 @@ type ConfigFlags struct {
 	Destination string
 }
 
-// NewInitConfigFlags initialize a new InitConfigFlags struct
+// NewInitConfigFlags initialize a new ConfigFlags struct
 func NewInitConfigFlags() *ConfigFlags {
 	return &ConfigFlags{}
 }
@@ -17,7 +17,18 @@ type InstancesFlags struct {
 	Destination string
 }
 
-// NewInitInstancesFlags initialize a new InitInstancesFlags struct
+// NewInitInstancesFlags initialize a new InstancesFlags struct
 func NewInitInstancesFlags() *InstancesFlags {
 	return &InstancesFlags{}
+}
+
+// TenantFlags represents `b3lbctl init tenant` flags
+type TenantFlags struct {
+	Hostname    string
+	Destination string
+}
+
+// NewInitTenantFlags initialize a new TenantFlags struct
+func NewInitTenantFlags() *TenantFlags {
+	return &TenantFlags{}
 }
