@@ -3,6 +3,7 @@ package mock
 import (
 	"github.com/SLedunois/b3lb/v2/pkg/api"
 	"github.com/SLedunois/b3lb/v2/pkg/balancer"
+	b3lbconfig "github.com/SLedunois/b3lb/v2/pkg/config"
 	"github.com/SLedunois/b3lbctl/pkg/admin"
 )
 
@@ -17,6 +18,8 @@ var (
 	ClusterStatusAdminFunc func() ([]balancer.InstanceStatus, error)
 	// B3lbAPIStatusAdminFunc is the function that will be called when the mock admin is used
 	B3lbAPIStatusAdminFunc func() (string, error)
+	// GetConfigurationFunc is the function that will be called when the mock admin is used
+	GetConfigurationFunc func() (*b3lbconfig.Config, error)
 )
 
 // InitAdminMock init admin.API object with an empty AdminMock struct
@@ -50,4 +53,9 @@ func (a *AdminMock) ClusterStatus() ([]balancer.InstanceStatus, error) {
 // B3lbAPIStatus is a mock implementation returning a list of InstanceStatus
 func (a *AdminMock) B3lbAPIStatus() (string, error) {
 	return B3lbAPIStatusAdminFunc()
+}
+
+// GetConfigurations is a mock implementation returning the configuration
+func (a *AdminMock) GetConfiguration() (*b3lbconfig.Config, error) {
+	return GetConfigurationFunc()
 }

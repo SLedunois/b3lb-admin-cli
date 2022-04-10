@@ -11,6 +11,7 @@ import (
 
 	"github.com/SLedunois/b3lb/v2/pkg/api"
 	"github.com/SLedunois/b3lb/v2/pkg/balancer"
+	b3lbconfig "github.com/SLedunois/b3lb/v2/pkg/config"
 	"github.com/SLedunois/b3lb/v2/pkg/restclient"
 	"github.com/SLedunois/b3lbctl/pkg/config"
 	"github.com/stretchr/testify/assert"
@@ -278,9 +279,11 @@ func TestClusterStatus(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		test.mock()
-		status, err := API.ClusterStatus()
-		test.validator(t, status, err)
+		t.Run(test.name, func(t *testing.T) {
+			test.mock()
+			status, err := API.ClusterStatus()
+			test.validator(t, status, err)
+		})
 	}
 }
 
@@ -361,8 +364,77 @@ func TestB3lbAPIStatus(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		test.mock()
-		status, err := API.B3lbAPIStatus()
-		test.validator(t, status, err)
+		t.Run(test.name, func(t *testing.T) {
+			test.mock()
+			status, err := API.B3lbAPIStatus()
+			test.validator(t, status, err)
+		})
+	}
+}
+
+func TestGetConfiguration(t *testing.T) {
+	initTests()
+	conf := &b3lbconfig.Config{
+		Admin: b3lbconfig.AdminConfig{
+			APIKey: "dummy_key",
+		},
+	}
+	tests := []test{
+		{
+			name: "an error returned by restclient should return an error",
+			mock: func() {
+				restclient.RestClientMockDoFunc = func(req *http.Request) (*http.Response, error) {
+					return nil, errors.New("rest error")
+				}
+			},
+			validator: func(t *testing.T, value interface{}, err error) {
+				assert.NotNil(t, err)
+			},
+		},
+		{
+			name: "an invalid body should return an error while unmarshalling content",
+			mock: func() {
+				restclient.RestClientMockDoFunc = func(req *http.Request) (*http.Response, error) {
+					return &http.Response{
+						StatusCode: http.StatusOK,
+						Body:       ioutil.NopCloser(bytes.NewReader(nil)),
+					}, nil
+				}
+			},
+			validator: func(t *testing.T, value interface{}, err error) {
+				assert.NotNil(t, err)
+			},
+		},
+		{
+			name: "a valid request should return a valid configuration",
+			mock: func() {
+				b, err := json.Marshal(conf)
+				if err != nil {
+					t.Fatal(err)
+					return
+				}
+
+				restclient.RestClientMockDoFunc = func(req *http.Request) (*http.Response, error) {
+					return &http.Response{
+						StatusCode: http.StatusOK,
+						Body:       ioutil.NopCloser(bytes.NewReader(b)),
+					}, nil
+				}
+			},
+			validator: func(t *testing.T, value interface{}, err error) {
+				assert.NotNil(t, value)
+				conf := value.(*b3lbconfig.Config)
+				assert.Nil(t, err)
+				assert.Equal(t, "dummy_key", conf.Admin.APIKey)
+			},
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			test.mock()
+			config, err := API.GetConfiguration()
+			test.validator(t, config, err)
+		})
 	}
 }
