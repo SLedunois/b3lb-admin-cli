@@ -14,7 +14,7 @@ import (
 // InstancesCmd struct represents the list command object
 type InstancesCmd struct {
 	Command *cobra.Command
-	Flags   *InstancesFlags
+	Flags   *Flags
 }
 
 // NewInstancesCmd return the instances list subcommand
@@ -25,7 +25,7 @@ func NewInstancesCmd() *cobra.Command {
 			Short: "Display all BigBlueButton instances available in your B3LB cluster",
 			Long:  `Display all BigBlueButton instances available in your B3LB cluster`,
 		},
-		Flags: NewInstancesFlags(),
+		Flags: NewFlags(),
 	}
 
 	cmd.Command.RunE = cmd.list
@@ -35,7 +35,7 @@ func NewInstancesCmd() *cobra.Command {
 	return cmd.Command
 }
 
-// ApplyFlags apply ListFlags to provided command
+// ApplyFlags apply GetFlags to provided command
 func (cmd *InstancesCmd) ApplyFlags() {
 	cmd.Command.Flags().BoolVarP(&cmd.Flags.CSV, "csv", "c", cmd.Flags.CSV, "csv output")
 	cmd.Command.Flags().BoolVarP(&cmd.Flags.JSON, "json", "j", cmd.Flags.JSON, "json output")
@@ -48,17 +48,15 @@ func (cmd *InstancesCmd) list(command *cobra.Command, args []string) error {
 	}
 
 	if cmd.Flags.JSON {
-		renderJSON(command, instances)
-	} else if cmd.Flags.CSV {
-		renderTable(command, instances, true)
+		renderBigBlueButtonInstancesJSON(command, instances)
 	} else {
-		renderTable(command, instances, false)
+		renderBigBlueButtonInstancesTable(command, instances, cmd.Flags.CSV)
 	}
 
 	return nil
 }
 
-func renderTable(cmd *cobra.Command, instances []api.BigBlueButtonInstance, csv bool) {
+func renderBigBlueButtonInstancesTable(cmd *cobra.Command, instances []api.BigBlueButtonInstance, csv bool) {
 	t := table.NewWriter()
 	t.AppendHeader(table.Row{"Url", "Secret"})
 
@@ -74,6 +72,6 @@ func renderTable(cmd *cobra.Command, instances []api.BigBlueButtonInstance, csv 
 	}
 }
 
-func renderJSON(cmd *cobra.Command, instances []api.BigBlueButtonInstance) {
+func renderBigBlueButtonInstancesJSON(cmd *cobra.Command, instances []api.BigBlueButtonInstance) {
 	cmd.Println(text.NewJSONTransformer("", "  ")(instances))
 }

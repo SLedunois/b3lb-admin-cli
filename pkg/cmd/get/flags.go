@@ -1,14 +1,14 @@
 package get
 
-// InstancesFlags contains all List command flags
-type InstancesFlags struct {
+// Flags contains all Get command flags
+type Flags struct {
 	CSV  bool
 	JSON bool
 }
 
-// NewInstancesFlags initialize a new ListFlags object
-func NewInstancesFlags() *InstancesFlags {
-	return &InstancesFlags{
+// NewGetFlags initialize a new InstancesFlags object
+func NewFlags() *Flags {
+	return &Flags{
 		CSV:  false,
 		JSON: false,
 	}
