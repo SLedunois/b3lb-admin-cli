@@ -19,7 +19,7 @@ import (
 // API is a public DefaultAdmin instance
 var API Admin
 
-const urlFormatter = "%s/admin/servers"
+const urlFormatter = "%s/admin/api/instances"
 
 // Admin represents admin api interface
 type Admin interface {
