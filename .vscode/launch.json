@@ -36,6 +36,17 @@
                 "describe",
                 "config"
             ]
+        },
+        {
+            "name": "b3lbctl instances list",
+            "type": "go",
+            "request": "launch",
+            "mode": "auto",
+            "program": "cmd/b3lbctl/main.go",
+            "args": [
+                "instances",
+                "list"
+            ]
         }
     ]
 }
