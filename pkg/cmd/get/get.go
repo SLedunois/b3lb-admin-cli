@@ -18,6 +18,7 @@ func NewCmd() *cobra.Command {
 	}
 
 	cmd.AddCommand(NewInstancesCmd())
+	cmd.AddCommand(NewTenantCmd())
 
 	return cmd
 }

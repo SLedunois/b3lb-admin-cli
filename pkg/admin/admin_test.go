@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"testing"
 
+	b3lbadmin "github.com/SLedunois/b3lb/v2/pkg/admin"
 	"github.com/SLedunois/b3lb/v2/pkg/api"
 	"github.com/SLedunois/b3lb/v2/pkg/balancer"
 	b3lbconfig "github.com/SLedunois/b3lb/v2/pkg/config"
@@ -434,6 +435,57 @@ func TestGetConfiguration(t *testing.T) {
 		t.Run(test.name, func(t *testing.T) {
 			test.mock()
 			config, err := API.GetConfiguration()
+			test.validator(t, config, err)
+		})
+	}
+}
+
+func TestGetTenants(t *testing.T) {
+	initTests()
+	tenants := &b3lbadmin.TenantList{
+		Kind:    "TenantList",
+		Tenants: []b3lbadmin.TenantListObject{},
+	}
+
+	tests := []test{
+		{
+			name: "an error returned by rest client should return an error",
+			mock: func() {
+				restclient.RestClientMockDoFunc = func(req *http.Request) (*http.Response, error) {
+					return nil, errors.New("http error")
+				}
+			},
+			validator: func(t *testing.T, value interface{}, err error) {
+				assert.NotNil(t, err)
+			},
+		},
+		{
+			name: "a valid request should return a TenantList",
+			mock: func() {
+				value, err := json.Marshal(tenants)
+				if err != nil {
+					t.Fatal(err)
+					return
+				}
+
+				restclient.RestClientMockDoFunc = func(req *http.Request) (*http.Response, error) {
+					return &http.Response{
+						StatusCode: http.StatusOK,
+						Body:       ioutil.NopCloser(bytes.NewReader(value)),
+					}, nil
+				}
+			},
+			validator: func(t *testing.T, value interface{}, err error) {
+				assert.Nil(t, err)
+				assert.Equal(t, tenants, value.(*b3lbadmin.TenantList))
+			},
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			test.mock()
+			config, err := API.GetTenants()
 			test.validator(t, config, err)
 		})
 	}
