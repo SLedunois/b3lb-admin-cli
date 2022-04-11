@@ -1,4 +1,4 @@
-package instances
+package get
 
 import (
 	"testing"

@@ -1,4 +1,4 @@
-package instances
+package get
 
 import (
 	"fmt"
@@ -11,21 +11,21 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// ListCmd struct represents the list command object
-type ListCmd struct {
+// InstancesCmd struct represents the list command object
+type InstancesCmd struct {
 	Command *cobra.Command
-	Flags   *ListFlags
+	Flags   *InstancesFlags
 }
 
-// NewListCmd return the instances list subcommand
-func NewListCmd() *cobra.Command {
-	cmd := &ListCmd{
+// NewInstancesCmd return the instances list subcommand
+func NewInstancesCmd() *cobra.Command {
+	cmd := &InstancesCmd{
 		Command: &cobra.Command{
-			Use:   "list",
-			Short: "List BigBlueButton instances",
-			Long:  `List all BigBlueButton instances available in your B3LB cluster`,
+			Use:   "instances [flags]",
+			Short: "Display all BigBlueButton instances available in your B3LB cluster",
+			Long:  `Display all BigBlueButton instances available in your B3LB cluster`,
 		},
-		Flags: NewListFlags(),
+		Flags: NewInstancesFlags(),
 	}
 
 	cmd.Command.RunE = cmd.list
@@ -35,7 +35,13 @@ func NewListCmd() *cobra.Command {
 	return cmd.Command
 }
 
-func (cmd *ListCmd) list(command *cobra.Command, args []string) error {
+// ApplyFlags apply ListFlags to provided command
+func (cmd *InstancesCmd) ApplyFlags() {
+	cmd.Command.Flags().BoolVarP(&cmd.Flags.CSV, "csv", "c", cmd.Flags.CSV, "csv output")
+	cmd.Command.Flags().BoolVarP(&cmd.Flags.JSON, "json", "j", cmd.Flags.JSON, "json output")
+}
+
+func (cmd *InstancesCmd) list(command *cobra.Command, args []string) error {
 	instances, err := admin.API.List()
 	if err != nil {
 		return fmt.Errorf("an error occured when getting remote instances: %s", err.Error())

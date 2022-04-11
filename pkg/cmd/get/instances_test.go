@@ -1,4 +1,4 @@
-package instances
+package get
 
 import (
 	"bytes"
@@ -95,7 +95,7 @@ func TestListCmd(t *testing.T) {
 	for _, test := range tests {
 		t.Run(test.Name, func(t *testing.T) {
 			b := bytes.NewBufferString("")
-			cmd := NewListCmd()
+			cmd := NewInstancesCmd()
 			cmd.SetArgs(test.Args)
 			cmd.SetOut(b)
 			test.Mock()

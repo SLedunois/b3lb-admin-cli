@@ -10,7 +10,7 @@ test.unit:
 	@echo "[TEST.UNIT] run unit tests and coverage"
 	@go test -race -covermode=atomic -coverprofile=coverage.out \
 		github.com/SLedunois/b3lbctl/pkg/cmd/root \
-		github.com/SLedunois/b3lbctl/pkg/cmd/instances \
+		github.com/SLedunois/b3lbctl/pkg/cmd/get \
 		github.com/SLedunois/b3lbctl/pkg/cmd/clusterinfo \
 		github.com/SLedunois/b3lbctl/pkg/cmd/describe \
 		github.com/SLedunois/b3lbctl/pkg/admin \

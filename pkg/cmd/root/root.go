@@ -9,8 +9,8 @@ import (
 	"github.com/SLedunois/b3lbctl/pkg/admin"
 	"github.com/SLedunois/b3lbctl/pkg/cmd/clusterinfo"
 	configcmd "github.com/SLedunois/b3lbctl/pkg/cmd/describe"
+	"github.com/SLedunois/b3lbctl/pkg/cmd/get"
 	initcmd "github.com/SLedunois/b3lbctl/pkg/cmd/init"
-	"github.com/SLedunois/b3lbctl/pkg/cmd/instances"
 	"github.com/SLedunois/b3lbctl/pkg/config"
 	"github.com/SLedunois/b3lbctl/pkg/system"
 	"github.com/spf13/cobra"
@@ -58,7 +58,7 @@ func NewCmd() *cobra.Command {
 
 	cmd.ApplyFlags()
 
-	cmd.Command.AddCommand(instances.NewCmd())
+	cmd.Command.AddCommand(get.NewCmd())
 	cmd.Command.AddCommand(clusterinfo.NewCmd())
 	cmd.Command.AddCommand(configcmd.NewCmd())
 	cmd.Command.AddCommand(initcmd.NewCmd())
