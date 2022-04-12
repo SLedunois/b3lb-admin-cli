@@ -60,10 +60,11 @@ func header() table.Row {
 	}
 }
 
-func renderClusterHeaderTable(command *cobra.Command, b3lbStatus string, activeMeetings int64, activeParticipants int64) {
+func renderClusterHeaderTable(command *cobra.Command, b3lbStatus string, activeMeetings int64, activeParticipants int64, activeTenants int64) {
 	t := table.NewWriter()
 	t.SetStyle(render.TableStyle())
 	t.AppendRow(table.Row{text.Bold.Sprint("B3LB API"), colorizedAPIStatus(b3lbStatus)})
+	t.AppendRow(table.Row{text.Bold.Sprint("Active tenants"), activeTenants})
 	t.AppendRow(table.Row{text.Bold.Sprint("Active meetings"), activeMeetings})
 	t.AppendRow(table.Row{text.Bold.Sprint("Active participants"), activeParticipants})
 	command.Println(t.Render())
@@ -79,6 +80,11 @@ func (cmd *ClusterInfoCmd) process(command *cobra.Command, args []string) error 
 	b3lbStatus, err := admin.API.B3lbAPIStatus()
 	if err != nil {
 		return fmt.Errorf("an error occurred while getting b3lb status: %s", err)
+	}
+
+	tenants, err := admin.API.GetTenants()
+	if err != nil {
+		return fmt.Errorf("an error occured while getting b3lb tenants: %s", err.Error())
 	}
 
 	t := table.NewWriter()
@@ -102,7 +108,7 @@ func (cmd *ClusterInfoCmd) process(command *cobra.Command, args []string) error 
 		activeParticipantsSum += instance.ActiveParticipants
 	}
 
-	renderClusterHeaderTable(command, b3lbStatus, activeMeetingSum, activeParticipantsSum)
+	renderClusterHeaderTable(command, b3lbStatus, activeMeetingSum, activeParticipantsSum, int64(len(tenants.Tenants)))
 	command.Println(t.Render())
 	return nil
 }
