@@ -16,3 +16,9 @@ test.unit:
 		github.com/SLedunois/b3lbctl/pkg/admin \
 		github.com/SLedunois/b3lbctl/pkg/config \
 		github.com/SLedunois/b3lbctl/pkg/system
+
+#build: @ build b3lb binary
+build:
+	@echo "[BUILD] build b3lbctl binary"
+	rm -rf bin
+	go build -o ./bin/b3lbctl ./cmd/b3lbctl/main.go
