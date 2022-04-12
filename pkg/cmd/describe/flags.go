@@ -9,9 +9,9 @@ func NewFlags() *Flags {
 }
 
 // ViewFlags contains all `config view` command flags
-type ViewFlags struct{}
+type ConfigFlags struct{}
 
 // NewViewFlags initialize a new ViewFlags object
-func NewViewFlags() *ViewFlags {
-	return &ViewFlags{}
+func NewConfigFlags() *ConfigFlags {
+	return &ConfigFlags{}
 }
