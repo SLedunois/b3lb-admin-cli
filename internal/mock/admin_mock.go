@@ -23,6 +23,8 @@ var (
 	GetConfigurationFunc func() (*b3lbconfig.Config, error)
 	// GetTenantsFunc is the function that will be called when the mock admin is used
 	GetTenantsFunc func() (*b3lbadmin.TenantList, error)
+	// GetTenantFunc is the function that will be called when the mock admin is used
+	GetTenantFunc func(hostname string) (*b3lbadmin.Tenant, error)
 )
 
 // InitAdminMock init admin.API object with an empty AdminMock struct
@@ -66,4 +68,9 @@ func (a *AdminMock) GetConfiguration() (*b3lbconfig.Config, error) {
 // GetTenants is a mock implementation return a TenantList
 func (a *AdminMock) GetTenants() (*b3lbadmin.TenantList, error) {
 	return GetTenantsFunc()
+}
+
+// GetTenant is a mock implementation that return a given tenant as kind Tenant
+func (a *AdminMock) GetTenant(hostname string) (*b3lbadmin.Tenant, error) {
+	return GetTenantFunc(hostname)
 }

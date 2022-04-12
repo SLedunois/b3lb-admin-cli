@@ -490,3 +490,83 @@ func TestGetTenants(t *testing.T) {
 		})
 	}
 }
+
+func TestGetTena(t *testing.T) {
+	initTests()
+
+	tenant := &b3lbadmin.Tenant{
+		Kind: "Tenant",
+		Spec: map[string]string{
+			"host": "localhost",
+		},
+		Instances: []string{},
+	}
+	tests := []test{
+		{
+			name: "an error returned by restclient should return an error",
+			mock: func() {
+				restclient.RestClientMockDoFunc = func(req *http.Request) (*http.Response, error) {
+					return nil, errors.New("rest error")
+				}
+			},
+			validator: func(t *testing.T, value interface{}, err error) {
+				assert.NotNil(t, err)
+			},
+		},
+		{
+			name: "a not found tenant should return an error",
+			mock: func() {
+				restclient.RestClientMockDoFunc = func(req *http.Request) (*http.Response, error) {
+					return &http.Response{
+						StatusCode: http.StatusNotFound,
+					}, nil
+				}
+			},
+			validator: func(t *testing.T, value interface{}, err error) {
+				assert.NotNil(t, err)
+			},
+		},
+		{
+			name: "a b3lb internal server error shoul return an error",
+			mock: func() {
+				restclient.RestClientMockDoFunc = func(req *http.Request) (*http.Response, error) {
+					return &http.Response{
+						StatusCode: http.StatusInternalServerError,
+					}, nil
+				}
+			},
+			validator: func(t *testing.T, value interface{}, err error) {
+				assert.NotNil(t, err)
+			},
+		},
+		{
+			name: "a valid request should return a valid kind Tenant struct",
+			mock: func() {
+				value, err := json.Marshal(tenant)
+				if err != nil {
+					t.Fatal(err)
+					return
+				}
+
+				restclient.RestClientMockDoFunc = func(req *http.Request) (*http.Response, error) {
+					return &http.Response{
+						StatusCode: http.StatusOK,
+						Body:       ioutil.NopCloser(bytes.NewReader(value)),
+					}, nil
+				}
+			},
+			validator: func(t *testing.T, value interface{}, err error) {
+				assert.Nil(t, err)
+				assert.Equal(t, tenant, value.(*b3lbadmin.Tenant))
+			},
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			test.mock()
+			config, err := API.GetTenant("localhost")
+			test.validator(t, config, err)
+		})
+	}
+}
