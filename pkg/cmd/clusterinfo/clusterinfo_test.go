@@ -10,6 +10,7 @@ import (
 	"github.com/jedib0t/go-pretty/v6/text"
 	"github.com/stretchr/testify/assert"
 
+	"github.com/SLedunois/b3lb/v2/pkg/admin"
 	"github.com/SLedunois/b3lb/v2/pkg/balancer"
 	"github.com/SLedunois/b3lbctl/internal/mock"
 	"github.com/SLedunois/b3lbctl/internal/test"
@@ -44,6 +45,23 @@ func TestClusterInfo(t *testing.T) {
 			},
 		},
 		{
+			Name: "an erorr thrown by admiin GetTenants method should return an error",
+			Mock: func() {
+				mock.ClusterStatusAdminFunc = func() ([]balancer.InstanceStatus, error) {
+					return []balancer.InstanceStatus{}, nil
+				}
+				mock.B3lbAPIStatusAdminFunc = func() (string, error) {
+					return "Up", nil
+				}
+				mock.GetTenantsFunc = func() (*admin.TenantList, error) {
+					return nil, errors.New("admin error")
+				}
+			},
+			Validator: func(t *testing.T, output *bytes.Buffer, err error) {
+				assert.NotNil(t, err)
+			},
+		},
+		{
 			Name: "a valid command should print cluster status",
 			Mock: func() {
 				mock.ClusterStatusAdminFunc = func() ([]balancer.InstanceStatus, error) {
@@ -61,12 +79,25 @@ func TestClusterInfo(t *testing.T) {
 				mock.B3lbAPIStatusAdminFunc = func() (string, error) {
 					return "Up", nil
 				}
+
+				mock.GetTenantsFunc = func() (*admin.TenantList, error) {
+					return &admin.TenantList{
+						Kind: "TenantList",
+						Tenants: []admin.TenantListObject{
+							{
+								Hostname:      "localhost",
+								InstanceCount: 1,
+							},
+						},
+					}, nil
+				}
 			},
 			Validator: func(t *testing.T, output *bytes.Buffer, err error) {
 				assert.Nil(t, err)
 				out, outErr := ioutil.ReadAll(output)
 				assert.Nil(t, outErr)
 				expected := `B3LB API             Up  
+Active tenants       1   
 Active meetings      1   
 Active participants  10  
 
