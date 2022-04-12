@@ -11,14 +11,14 @@ import (
 
 // ConfigCmd represents config command type
 type ConfigCmd struct {
-	Flags   *ViewFlags
+	Flags   *ConfigFlags
 	Command *cobra.Command
 }
 
 // NewConfigCmd initialize a new view command
 func NewConfigCmd() *cobra.Command {
 	cmd := &ConfigCmd{
-		Flags: NewViewFlags(),
+		Flags: NewConfigFlags(),
 		Command: &cobra.Command{
 			Use:   "config",
 			Short: "describe B3LB configuration.",
