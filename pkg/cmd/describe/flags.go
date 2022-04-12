@@ -8,10 +8,20 @@ func NewFlags() *Flags {
 	return &Flags{}
 }
 
-// ViewFlags contains all `config view` command flags
+// ConfigFlags contains all `b3lbctl describe config` command flags
 type ConfigFlags struct{}
 
-// NewViewFlags initialize a new ViewFlags object
+// NewConfigFlags initialize a new ConfigFlags object
 func NewConfigFlags() *ConfigFlags {
 	return &ConfigFlags{}
+}
+
+// TenantFlags contains all `b3lbctl describe tenant <tenant> command flags`
+type TenantFlags struct {
+	Hostname string
+}
+
+// NewTenantFlags initialize a new TenantFlags object
+func NewTenantFlags() *TenantFlags {
+	return &TenantFlags{}
 }

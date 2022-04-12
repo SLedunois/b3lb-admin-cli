@@ -58,6 +58,18 @@
                 "get",
                 "tenants"
             ]
+        },
+        {
+            "name": "b3lbctl describe tenant",
+            "type": "go",
+            "request": "launch",
+            "mode": "auto",
+            "program": "cmd/b3lbctl/main.go",
+            "args": [
+                "describe",
+                "tenant",
+                "localhost:8090"
+            ]
         }
     ]
 }

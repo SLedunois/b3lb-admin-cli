@@ -31,6 +31,7 @@ type Admin interface {
 	B3lbAPIStatus() (string, error)
 	GetConfiguration() (*b3lbconfig.Config, error)
 	GetTenants() (*b3lbadmin.TenantList, error)
+	GetTenant(hostname string) (*b3lbadmin.Tenant, error)
 }
 
 // DefaultAdmin is the default admin api struct. It an empty struct
@@ -192,4 +193,32 @@ func (a *DefaultAdmin) GetTenants() (*b3lbadmin.TenantList, error) {
 	}
 
 	return tenants, nil
+}
+
+// GetTenant return a specific tenant as kind Tenant
+func (a *DefaultAdmin) GetTenant(hostname string) (*b3lbadmin.Tenant, error) {
+	resp, err := restclient.GetWithHeaders(fmt.Sprintf("%s/admin/api/tenants/%s", *config.B3LB, hostname), authorization())
+	if err != nil {
+		return nil, err
+	}
+
+	if resp.StatusCode == http.StatusNotFound {
+		return nil, errors.New("tenant not found")
+	}
+
+	if resp.StatusCode == http.StatusInternalServerError {
+		return nil, errors.New("b3lb internal error. Please check your b3lb instance")
+	}
+
+	res, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	var tenant *b3lbadmin.Tenant
+	if err := json.Unmarshal(res, &tenant); err != nil {
+		return nil, err
+	}
+
+	return tenant, nil
 }
