@@ -32,6 +32,7 @@ type Admin interface {
 	GetConfiguration() (*b3lbconfig.Config, error)
 	GetTenants() (*b3lbadmin.TenantList, error)
 	GetTenant(hostname string) (*b3lbadmin.Tenant, error)
+	DeleteTenant(hostname string) error
 }
 
 // DefaultAdmin is the default admin api struct. It an empty struct
@@ -221,4 +222,23 @@ func (a *DefaultAdmin) GetTenant(hostname string) (*b3lbadmin.Tenant, error) {
 	}
 
 	return tenant, nil
+}
+
+// DeleteTenant delete given tenant from b3lb cluster
+func (a *DefaultAdmin) DeleteTenant(hostname string) error {
+	resp, err := restclient.DeleteWithHeaders(fmt.Sprintf("%s/admin/api/tenants/%s", *config.B3LB, hostname), authorization())
+	if err != nil {
+		return err
+	}
+
+	if resp.StatusCode != http.StatusNoContent {
+		res, err := ioutil.ReadAll(resp.Body)
+		if err != nil {
+			return fmt.Errorf("b3lb respond with an unreadable error: %s", err.Error())
+		}
+
+		return fmt.Errorf("unable to delete tenant: %s", string(res))
+	}
+
+	return nil
 }
