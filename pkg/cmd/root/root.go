@@ -8,6 +8,7 @@ import (
 	"github.com/SLedunois/b3lb/v2/pkg/restclient"
 	"github.com/SLedunois/b3lbctl/pkg/admin"
 	"github.com/SLedunois/b3lbctl/pkg/cmd/clusterinfo"
+	"github.com/SLedunois/b3lbctl/pkg/cmd/delete"
 	configcmd "github.com/SLedunois/b3lbctl/pkg/cmd/describe"
 	"github.com/SLedunois/b3lbctl/pkg/cmd/get"
 	initcmd "github.com/SLedunois/b3lbctl/pkg/cmd/init"
@@ -62,6 +63,7 @@ func NewCmd() *cobra.Command {
 	cmd.Command.AddCommand(clusterinfo.NewCmd())
 	cmd.Command.AddCommand(configcmd.NewCmd())
 	cmd.Command.AddCommand(initcmd.NewCmd())
+	cmd.Command.AddCommand(delete.NewCmd())
 
 	return cmd.Command
 }

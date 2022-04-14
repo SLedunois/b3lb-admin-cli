@@ -570,3 +570,57 @@ func TestGetTena(t *testing.T) {
 		})
 	}
 }
+
+func TestDeleteTenant(t *testing.T) {
+	initTests()
+
+	tests := []test{
+		{
+			name: "an error returned by rest client should return the error",
+			mock: func() {
+				restclient.RestClientMockDoFunc = func(req *http.Request) (*http.Response, error) {
+					return nil, errors.New("rest error")
+				}
+			},
+			validator: func(t *testing.T, value interface{}, err error) {
+				assert.NotNil(t, err)
+			},
+		},
+		{
+			name: "http status != 204 should return an error",
+			mock: func() {
+				restclient.RestClientMockDoFunc = func(req *http.Request) (*http.Response, error) {
+					return &http.Response{
+						StatusCode: http.StatusBadRequest,
+						Body:       ioutil.NopCloser(bytes.NewReader([]byte("b3lb error"))),
+					}, nil
+				}
+			},
+			validator: func(t *testing.T, value interface{}, err error) {
+				assert.NotNil(t, err)
+				assert.Equal(t, "unable to delete tenant: b3lb error", err.Error())
+			},
+		},
+		{
+			name: "a valid request should return nil",
+			mock: func() {
+				restclient.RestClientMockDoFunc = func(req *http.Request) (*http.Response, error) {
+					return &http.Response{
+						StatusCode: http.StatusNoContent,
+					}, nil
+				}
+			},
+			validator: func(t *testing.T, value interface{}, err error) {
+				assert.Nil(t, err)
+			},
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			test.mock()
+			err := API.DeleteTenant("localhost")
+			test.validator(t, nil, err)
+		})
+	}
+}
