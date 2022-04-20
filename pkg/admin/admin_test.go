@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"testing"
 
+	"github.com/SLedunois/b3lb/v2/pkg/admin"
 	b3lbadmin "github.com/SLedunois/b3lb/v2/pkg/admin"
 	"github.com/SLedunois/b3lb/v2/pkg/api"
 	"github.com/SLedunois/b3lb/v2/pkg/balancer"
@@ -620,6 +621,95 @@ func TestDeleteTenant(t *testing.T) {
 		t.Run(test.name, func(t *testing.T) {
 			test.mock()
 			err := API.DeleteTenant("localhost")
+			test.validator(t, nil, err)
+		})
+	}
+}
+
+func TestApply(t *testing.T) {
+	initTests()
+
+	var kind string
+	var resource interface{}
+
+	tests := []test{
+		{
+			name: "an error returned by restclient while applying InstanceList should be returned",
+			mock: func() {
+				resource = &admin.InstanceList{
+					Kind:      "InstanceList",
+					Instances: map[string]string{},
+				}
+				kind = "InstanceList"
+				restclient.RestClientMockDoFunc = func(req *http.Request) (*http.Response, error) {
+					return nil, errors.New("rest error")
+				}
+			},
+			validator: func(t *testing.T, value interface{}, err error) {
+				assert.NotNil(t, err)
+			},
+		},
+		{
+			name: "an error returned by restclient while applying Tenant should be returned",
+			mock: func() {
+				resource = &admin.Tenant{
+					Kind:      "Tenant",
+					Spec:      map[string]string{},
+					Instances: []string{},
+				}
+				kind = "Tenant"
+				restclient.RestClientMockDoFunc = func(req *http.Request) (*http.Response, error) {
+					return nil, errors.New("rest error")
+				}
+			},
+			validator: func(t *testing.T, value interface{}, err error) {
+				assert.NotNil(t, err)
+			},
+		},
+		{
+			name: "an http status != 201 - Created should return an error",
+			mock: func() {
+				resource = &admin.Tenant{
+					Kind:      "Tenant",
+					Spec:      map[string]string{},
+					Instances: []string{},
+				}
+				kind = "Tenant"
+				restclient.RestClientMockDoFunc = func(req *http.Request) (*http.Response, error) {
+					return &http.Response{
+						StatusCode: http.StatusInternalServerError,
+					}, nil
+				}
+			},
+			validator: func(t *testing.T, value interface{}, err error) {
+				assert.NotNil(t, err)
+			},
+		},
+		{
+			name: "a valid request should return no error",
+			mock: func() {
+				resource = &admin.Tenant{
+					Kind:      "Tenant",
+					Spec:      map[string]string{},
+					Instances: []string{},
+				}
+				kind = "Tenant"
+				restclient.RestClientMockDoFunc = func(req *http.Request) (*http.Response, error) {
+					return &http.Response{
+						StatusCode: http.StatusCreated,
+					}, nil
+				}
+			},
+			validator: func(t *testing.T, value interface{}, err error) {
+				assert.Nil(t, err)
+			},
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			test.mock()
+			err := API.Apply(kind, &resource)
 			test.validator(t, nil, err)
 		})
 	}
