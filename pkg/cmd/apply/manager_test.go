@@ -37,6 +37,46 @@ func TestToResource(t *testing.T) {
 				assert.Equal(t, "admin.InstanceList", reflect.ValueOf(resource).Type().String())
 			},
 		},
+		{
+			name: "passing a kind Tenant should return a Tenant struct",
+			mock: func() {
+				tenant := &admin.Tenant{
+					Kind:      "Tenant",
+					Instances: []string{},
+					Spec:      map[string]string{},
+				}
+
+				out, err := yaml.Marshal(tenant)
+				if err != nil {
+					t.Fatal(err)
+				}
+
+				in = out
+			},
+			validator: func(t *testing.T, kind string, resource interface{}, err error) {
+				assert.Nil(t, err)
+				assert.Equal(t, "Tenant", kind)
+				assert.Equal(t, "admin.Tenant", reflect.ValueOf(resource).Type().String())
+			},
+		},
+		{
+			name: "passing an unknown kind should return an error",
+			mock: func() {
+				resource := &Resource{
+					Kind: "FakeKind",
+				}
+
+				out, err := yaml.Marshal(resource)
+				if err != nil {
+					t.Fatal(err)
+				}
+
+				in = out
+			},
+			validator: func(t *testing.T, kind string, resource interface{}, err error) {
+				assert.NotNil(t, err)
+			},
+		},
 	}
 
 	for _, test := range tests {
