@@ -53,7 +53,7 @@ func TestNewCmd(t *testing.T) {
 			},
 		},
 		{
-			Name: "applying an InstanceList file should print a valid `InstanceList created` message",
+			Name: "applying an InstanceList file should print a valid `InstanceList resource created` message",
 			Args: []string{"-f", "/tmp/instances.yml"},
 			Mock: func() {
 				mock.ApplyFunc = func(kind string, resource *interface{}) error {
@@ -62,7 +62,35 @@ func TestNewCmd(t *testing.T) {
 			},
 			Validator: func(t *testing.T, output *bytes.Buffer, err error) {
 				assert.Nil(t, err)
-				assert.Equal(t, "InstanceList created", strings.TrimSpace(string(output.Bytes())))
+				assert.Equal(t, "InstanceList resource created", strings.TrimSpace(string(output.Bytes())))
+			},
+		},
+		{
+			Name: "applying a Tenant file should print `Tenant resource created`",
+			Args: []string{"-f", "/tmp/localhost.tenant.yml"},
+			Mock: func() {
+				instances := &admin.Tenant{
+					Kind:      "Tenant",
+					Spec:      map[string]string{},
+					Instances: []string{},
+				}
+
+				out, err := yaml.Marshal(instances)
+				if err != nil {
+					t.Fatal(err)
+				}
+
+				if err := os.WriteFile("/tmp/localhost.tenant.yml", out, os.FileMode(0644)); err != nil {
+					t.Fatal(err)
+				}
+
+				mock.ApplyFunc = func(kind string, resource *interface{}) error {
+					return nil
+				}
+			},
+			Validator: func(t *testing.T, output *bytes.Buffer, err error) {
+				assert.Nil(t, err)
+				assert.Equal(t, "Tenant resource created", strings.TrimSpace(string(output.Bytes())))
 			},
 		},
 	}

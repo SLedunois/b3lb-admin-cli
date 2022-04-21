@@ -41,8 +41,8 @@ func (cmd *Cmd) ApplyFlags() {
 }
 
 func (cmd *Cmd) printApplyMessage(kind string, resource *interface{}) {
-	if kind == "InstanceList" {
-		cmd.Command.Println("InstanceList created")
+	if kind == "InstanceList" || kind == "Tenant" {
+		cmd.Command.Println(fmt.Sprintf("%s resource created", kind))
 	}
 }
 
