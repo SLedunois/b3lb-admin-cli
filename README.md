@@ -27,14 +27,17 @@ Usage:
   b3lbctl [command]
 
 Available Commands:
+  apply        Apply a configuration to b3lb server using a file
   cluster-info Get overall cluster information
   completion   Generate the autocompletion script for the specified shell
-  config       Manage B3LB config file using subcommands.
+  delete       Delete a specific resource
+  describe     Show details of a specific resource or group of resources
+  get          Display a resource
   help         Help about any command
-  instances    Manage B3LB instances
+  init         Initialize a resource
 
 Flags:
-      --config string   config file (default is $HOME/.b3lb.yaml) (default "$HOME/.b3lb.yaml")
+      --config string   config file (default is $HOME/.b3lb/.b3lbctl.yml) (default "$HOME/.b3lb/.b3lbctl.yml")
   -h, --help            help for b3lbctl
 
 Use "b3lbctl [command] --help" for more information about a command.
