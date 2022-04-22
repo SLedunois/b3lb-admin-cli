@@ -71,6 +71,8 @@ func (cmd *InitConfigCmd) init(command *cobra.Command, args []string) error {
 		return fmt.Errorf("failed to write configuration file: %s", err.Error())
 	}
 
+	command.Println(fmt.Sprintf("configuration successfully initialized. Please check %s file", path.Join(dest, config.DefaultConfigFileName)))
+
 	return nil
 }
 
