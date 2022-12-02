@@ -3,9 +3,9 @@ package get
 import (
 	"fmt"
 
-	"github.com/SLedunois/b3lb/v2/pkg/api"
-	"github.com/SLedunois/b3lbctl/pkg/admin"
-	"github.com/SLedunois/b3lbctl/pkg/render"
+	"github.com/bigblueswarm/bbsctl/pkg/admin"
+	"github.com/bigblueswarm/bbsctl/pkg/render"
+	"github.com/bigblueswarm/bigblueswarm/v2/pkg/api"
 	"github.com/jedib0t/go-pretty/v6/table"
 	"github.com/jedib0t/go-pretty/v6/text"
 	"github.com/spf13/cobra"
@@ -22,8 +22,8 @@ func NewInstancesCmd() *cobra.Command {
 	cmd := &InstancesCmd{
 		Command: &cobra.Command{
 			Use:   "instances [flags]",
-			Short: "Display all BigBlueButton instances available in your B3LB cluster",
-			Long:  `Display all BigBlueButton instances available in your B3LB cluster`,
+			Short: "Display all BigBlueButton instances available in your BigBlueSwarm cluster",
+			Long:  `Display all BigBlueButton instances available in your BigBlueSwarm cluster`,
 		},
 		Flags: NewFlags(),
 	}

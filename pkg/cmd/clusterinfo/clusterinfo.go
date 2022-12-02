@@ -3,8 +3,8 @@ package clusterinfo
 import (
 	"fmt"
 
-	"github.com/SLedunois/b3lbctl/pkg/admin"
-	"github.com/SLedunois/b3lbctl/pkg/render"
+	"github.com/bigblueswarm/bbsctl/pkg/admin"
+	"github.com/bigblueswarm/bbsctl/pkg/render"
 	"github.com/jedib0t/go-pretty/v6/table"
 	"github.com/jedib0t/go-pretty/v6/text"
 	"github.com/spf13/cobra"
@@ -60,10 +60,10 @@ func header() table.Row {
 	}
 }
 
-func renderClusterHeaderTable(command *cobra.Command, b3lbStatus string, activeMeetings int64, activeParticipants int64, activeTenants int64) {
+func renderClusterHeaderTable(command *cobra.Command, bbsStatus string, activeMeetings int64, activeParticipants int64, activeTenants int64) {
 	t := table.NewWriter()
 	t.SetStyle(render.TableStyle())
-	t.AppendRow(table.Row{text.Bold.Sprint("B3LB API"), colorizedAPIStatus(b3lbStatus)})
+	t.AppendRow(table.Row{text.Bold.Sprint("BigBlueSwarm API"), colorizedAPIStatus(bbsStatus)})
 	t.AppendRow(table.Row{text.Bold.Sprint("Active tenants"), activeTenants})
 	t.AppendRow(table.Row{text.Bold.Sprint("Active meetings"), activeMeetings})
 	t.AppendRow(table.Row{text.Bold.Sprint("Active participants"), activeParticipants})
@@ -77,14 +77,14 @@ func (cmd *ClusterInfoCmd) process(command *cobra.Command, args []string) error 
 		return fmt.Errorf("an error occurred while getting cluster status: %s", err)
 	}
 
-	b3lbStatus, err := admin.API.B3lbAPIStatus()
+	bbsStatus, err := admin.API.BBSAPIStatus()
 	if err != nil {
-		return fmt.Errorf("an error occurred while getting b3lb status: %s", err)
+		return fmt.Errorf("an error occurred while getting bigblueswarm status: %s", err)
 	}
 
 	tenants, err := admin.API.GetTenants()
 	if err != nil {
-		return fmt.Errorf("an error occured while getting b3lb tenants: %s", err.Error())
+		return fmt.Errorf("an error occured while getting bigblueswarm tenants: %s", err.Error())
 	}
 
 	t := table.NewWriter()
@@ -108,7 +108,7 @@ func (cmd *ClusterInfoCmd) process(command *cobra.Command, args []string) error 
 		activeParticipantsSum += instance.ActiveParticipants
 	}
 
-	renderClusterHeaderTable(command, b3lbStatus, activeMeetingSum, activeParticipantsSum, int64(len(tenants.Tenants)))
+	renderClusterHeaderTable(command, bbsStatus, activeMeetingSum, activeParticipantsSum, int64(len(tenants.Tenants)))
 	command.Println(t.Render())
 	return nil
 }

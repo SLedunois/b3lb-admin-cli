@@ -5,11 +5,11 @@ import (
 	"os"
 	"path"
 
-	b3lbconfig "github.com/SLedunois/b3lb/v2/pkg/config"
+	bbsconfig "github.com/bigblueswarm/bigblueswarm/v2/pkg/config"
 )
 
 func processDestination(dest string) (string, error) {
-	if dest == b3lbconfig.DefaultConfigFolder {
+	if dest == bbsconfig.DefaultConfigFolder {
 		formalized, err := formalizeDefaultConfigFolder()
 		if err != nil {
 			return "", fmt.Errorf("unable to initialize configuration: %s", err.Error())
@@ -27,5 +27,5 @@ func formalizeDefaultConfigFolder() (string, error) {
 		return "", err
 	}
 
-	return path.Join(home, ".b3lb"), nil
+	return path.Join(home, ".bigblueswarm"), nil
 }

@@ -5,7 +5,7 @@ bigbluebutton:
 balancer:
   metrics_range: -5m
 admin:
-  api_key: b3lb_admin_api_key
+  api_key: bbs_admin_api_key
   url: http://localhost:8090
 port: 8090
 redis:
@@ -15,6 +15,5 @@ redis:
 influxdb:
   address: http://localhost:8086
   token: influxdb_token
-  organization: b3lb
+  organization: bigblueswarm
   bucket: bucket
-...

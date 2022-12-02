@@ -5,15 +5,15 @@ import (
 	"os"
 	"path"
 
-	b3lbadmin "github.com/SLedunois/b3lb/v2/pkg/admin"
-	b3lbconfig "github.com/SLedunois/b3lb/v2/pkg/config"
+	bbsadmin "github.com/bigblueswarm/bigblueswarm/v2/pkg/admin"
+	bbsconfig "github.com/bigblueswarm/bigblueswarm/v2/pkg/config"
 	"github.com/spf13/cobra"
 	"gopkg.in/yaml.v3"
 )
 
 const instancesConfigFilename = "instances.yml"
 
-// InstancesCmd represents the `b3lbctl init instances` command
+// InstancesCmd represents the `bbsctl init instances` command
 type InstancesCmd struct {
 	Command *cobra.Command
 	Flags   *InstancesFlags
@@ -24,7 +24,7 @@ func NewInitInstancesCmd() *cobra.Command {
 	cmd := &InstancesCmd{
 		Command: &cobra.Command{
 			Use:   "instances [flags]",
-			Short: "Initialize b3lb instances file",
+			Short: "Initialize bigblueswarm instances file",
 			Long:  "Create instances list file if it does not exists",
 		},
 		Flags: NewInitInstancesFlags(),
@@ -40,7 +40,7 @@ func NewInitInstancesCmd() *cobra.Command {
 
 // ApplyFlags apply command flags to InitInstancesCmd
 func (cmd *InstancesCmd) ApplyFlags() {
-	cmd.Command.Flags().StringVarP(&cmd.Flags.Destination, "dest", "d", b3lbconfig.DefaultConfigFolder, "File folder destination")
+	cmd.Command.Flags().StringVarP(&cmd.Flags.Destination, "dest", "d", bbsconfig.DefaultConfigFolder, "File folder destination")
 }
 
 func (cmd *InstancesCmd) init(command *cobra.Command, args []string) error {
@@ -49,7 +49,7 @@ func (cmd *InstancesCmd) init(command *cobra.Command, args []string) error {
 		return fmt.Errorf("instances configuration file already exists. Please consider editing %s file", destFile)
 	}
 
-	instances := &b3lbadmin.InstanceList{
+	instances := &bbsadmin.InstanceList{
 		Kind: "InstanceList",
 	}
 

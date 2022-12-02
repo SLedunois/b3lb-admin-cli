@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/SLedunois/b3lbctl/pkg/admin"
+	"github.com/bigblueswarm/bbsctl/pkg/admin"
 	"github.com/spf13/cobra"
 	"gopkg.in/yaml.v3"
 )
@@ -21,8 +21,8 @@ func NewConfigCmd() *cobra.Command {
 		Flags: NewConfigFlags(),
 		Command: &cobra.Command{
 			Use:   "config",
-			Short: "describe B3LB configuration.",
-			Long:  `describe B3LB configuration.`,
+			Short: "describe BigBlueSwarm configuration.",
+			Long:  `describe BigBlueSwarm configuration.`,
 		},
 	}
 
@@ -35,12 +35,12 @@ func (c *ConfigCmd) process(command *cobra.Command, args []string) error {
 	command.SilenceUsage = true
 	config, err := admin.API.GetConfiguration()
 	if err != nil {
-		return fmt.Errorf("unable to describe b3lb configuration: %s", err.Error())
+		return fmt.Errorf("unable to describe bigblueswarm configuration: %s", err.Error())
 	}
 
 	out, err := yaml.Marshal(config)
 	if err != nil {
-		return fmt.Errorf("unable to describe b3lb configuration: %s", err.Error())
+		return fmt.Errorf("unable to describe bigblueswarm configuration: %s", err.Error())
 	}
 
 	command.Println(normalizeYaml(string(out)))

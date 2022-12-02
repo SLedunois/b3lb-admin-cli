@@ -10,10 +10,10 @@ import (
 	"github.com/jedib0t/go-pretty/v6/text"
 	"github.com/stretchr/testify/assert"
 
-	"github.com/SLedunois/b3lb/v2/pkg/admin"
-	"github.com/SLedunois/b3lb/v2/pkg/balancer"
-	"github.com/SLedunois/b3lbctl/internal/mock"
-	"github.com/SLedunois/b3lbctl/internal/test"
+	"github.com/bigblueswarm/bbsctl/internal/mock"
+	"github.com/bigblueswarm/bbsctl/internal/test"
+	"github.com/bigblueswarm/bigblueswarm/v2/pkg/admin"
+	"github.com/bigblueswarm/bigblueswarm/v2/pkg/balancer"
 )
 
 func TestClusterInfo(t *testing.T) {
@@ -31,12 +31,12 @@ func TestClusterInfo(t *testing.T) {
 			},
 		},
 		{
-			Name: "an error thrown by admin b3lb api status method should return an error",
+			Name: "an error thrown by admin bigblueswarm api status method should return an error",
 			Mock: func() {
 				mock.ClusterStatusAdminFunc = func() ([]balancer.InstanceStatus, error) {
 					return []balancer.InstanceStatus{}, nil
 				}
-				mock.B3lbAPIStatusAdminFunc = func() (string, error) {
+				mock.BBSAPIStatusAdminFunc = func() (string, error) {
 					return "", errors.New("admin error")
 				}
 			},
@@ -50,7 +50,7 @@ func TestClusterInfo(t *testing.T) {
 				mock.ClusterStatusAdminFunc = func() ([]balancer.InstanceStatus, error) {
 					return []balancer.InstanceStatus{}, nil
 				}
-				mock.B3lbAPIStatusAdminFunc = func() (string, error) {
+				mock.BBSAPIStatusAdminFunc = func() (string, error) {
 					return "Up", nil
 				}
 				mock.GetTenantsFunc = func() (*admin.TenantList, error) {
@@ -76,7 +76,7 @@ func TestClusterInfo(t *testing.T) {
 						},
 					}, nil
 				}
-				mock.B3lbAPIStatusAdminFunc = func() (string, error) {
+				mock.BBSAPIStatusAdminFunc = func() (string, error) {
 					return "Up", nil
 				}
 
@@ -96,7 +96,7 @@ func TestClusterInfo(t *testing.T) {
 				assert.Nil(t, err)
 				out, outErr := ioutil.ReadAll(output)
 				assert.Nil(t, outErr)
-				expected := `B3LB API             Up  
+				expected := `BigBlueSwarm API     Up  
 Active tenants       1   
 Active meetings      1   
 Active participants  10  

@@ -6,20 +6,20 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/SLedunois/b3lb/v2/pkg/config"
+	"github.com/bigblueswarm/bigblueswarm/v2/pkg/config"
 	"gopkg.in/yaml.v2"
 )
 
 // DefaultConfigFileName is the default config file name
-const DefaultConfigFileName = ".b3lbctl.yml"
+const DefaultConfigFileName = ".bbsctl.yml"
 
 var defaultConfigPath = fmt.Sprintf("%s/%s", config.DefaultConfigFolder, DefaultConfigFileName)
 
 // APIKey is the admin API key configuration found in configuration file
 var APIKey *string
 
-// B3LB is the admin url configuration found in configuration file
-var B3LB *string
+// BBS is the admin url configuration found in configuration file
+var BBS *string
 
 // Path is the direct path for configuration file
 var Path *string
@@ -32,7 +32,7 @@ func Init(path string) error {
 			return err
 		}
 
-		path = filepath.Join(homeDir, ".b3lb", DefaultConfigFileName)
+		path = filepath.Join(homeDir, ".bigblueswarm", DefaultConfigFileName)
 	}
 
 	c, err := load(path)
@@ -40,7 +40,7 @@ func Init(path string) error {
 		return fmt.Errorf("unable to load configuration: %s", err.Error())
 	}
 
-	B3LB = &c.B3lb
+	BBS = &c.BBS
 	APIKey = &c.APIKey
 	Path = &path
 

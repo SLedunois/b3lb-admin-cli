@@ -7,8 +7,8 @@ import (
 	"path"
 	"testing"
 
-	b3lbadmin "github.com/SLedunois/b3lb/v2/pkg/admin"
-	"github.com/SLedunois/b3lbctl/internal/test"
+	"github.com/bigblueswarm/bbsctl/internal/test"
+	bbsadmin "github.com/bigblueswarm/bigblueswarm/v2/pkg/admin"
 	"github.com/stretchr/testify/assert"
 	"gopkg.in/yaml.v3"
 )
@@ -20,31 +20,31 @@ func TestInitTenantCmd(t *testing.T) {
 		return
 	}
 
-	os.Remove(fmt.Sprintf("%s/.b3lb", homedir))
+	os.Remove(fmt.Sprintf("%s/.bigblueswarm", homedir))
 
 	tests := []test.CmdTest{
 		{
 			Name: "a valid comment should init a new tenant file",
 			Args: []string{"--host", "localhost"},
 			Validator: func(t *testing.T, output *bytes.Buffer, err error) {
-				file := fmt.Sprintf("%s/.b3lb/localhost.tenant.yml", homedir)
+				file := fmt.Sprintf("%s/.bigblueswarm/localhost.tenant.yml", homedir)
 				b, err := os.ReadFile(file)
 				if err != nil {
 					t.Fatal(err)
 					return
 				}
 
-				var tenant b3lbadmin.Tenant
+				var tenant bbsadmin.Tenant
 				if err := yaml.Unmarshal(b, &tenant); err != nil {
 					t.Fatal(err)
 					return
 				}
 
 				assert.Equal(t, "Tenant", tenant.Kind)
-				assert.Equal(t, "localhost", tenant.Spec["host"])
+				assert.Equal(t, "localhost", tenant.Spec.Host)
 				assert.Equal(t, 0, len(tenant.Instances))
 				assert.Nil(t, err)
-				assert.Equal(t, fmt.Sprintf("tenant file successfully initialized. Please check %s/.b3lb/localhost.tenant.yml file\n", homedir), string(output.Bytes()))
+				assert.Equal(t, fmt.Sprintf("tenant file successfully initialized. Please check %s/.bigblueswarm/localhost.tenant.yml file\n", homedir), string(output.Bytes()))
 			},
 		},
 		{
@@ -52,7 +52,7 @@ func TestInitTenantCmd(t *testing.T) {
 			Args: []string{"--host", "localhost"},
 			Validator: func(t *testing.T, output *bytes.Buffer, err error) {
 				assert.NotNil(t, err)
-				assert.Equal(t, fmt.Sprintf("localhost.tenant.yml tenant file already exists. Please consider editing %s file", path.Join(homedir, ".b3lb", "localhost.tenant.yml")), err.Error())
+				assert.Equal(t, fmt.Sprintf("localhost.tenant.yml tenant file already exists. Please consider editing %s file", path.Join(homedir, ".bigblueswarm", "localhost.tenant.yml")), err.Error())
 			},
 		},
 		{
