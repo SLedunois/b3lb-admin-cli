@@ -5,12 +5,12 @@ import (
 	"errors"
 	"testing"
 
-	b3lbadmin "github.com/SLedunois/b3lb/v2/pkg/admin"
+	bbsadmin "github.com/bigblueswarm/bigblueswarm/v2/pkg/admin"
 	"gopkg.in/yaml.v3"
 
-	"github.com/SLedunois/b3lbctl/internal/mock"
-	"github.com/SLedunois/b3lbctl/internal/test"
-	"github.com/SLedunois/b3lbctl/pkg/admin"
+	"github.com/bigblueswarm/bbsctl/internal/mock"
+	"github.com/bigblueswarm/bbsctl/internal/test"
+	"github.com/bigblueswarm/bbsctl/pkg/admin"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -21,10 +21,10 @@ func TestNewTenantCmd(t *testing.T) {
 func TestDescribeTenantC(t *testing.T) {
 	admin.API = &mock.AdminMock{}
 
-	tenant := &b3lbadmin.Tenant{
+	tenant := &bbsadmin.Tenant{
 		Kind: "Tenant",
-		Spec: map[string]string{
-			"host": "localhost",
+		Spec: &bbsadmin.TenantSpec{
+			Host: "localhost",
 		},
 		Instances: []string{},
 	}
@@ -42,7 +42,7 @@ func TestDescribeTenantC(t *testing.T) {
 			Name: "an error returned by admin should return an error",
 			Args: []string{"localhost"},
 			Mock: func() {
-				mock.GetTenantFunc = func(hostname string) (*b3lbadmin.Tenant, error) {
+				mock.GetTenantFunc = func(hostname string) (*bbsadmin.Tenant, error) {
 					return nil, errors.New("admin error")
 				}
 			},
@@ -55,12 +55,12 @@ func TestDescribeTenantC(t *testing.T) {
 			Name: "a valid command should describe a valid tenant",
 			Args: []string{"localhost"},
 			Mock: func() {
-				mock.GetTenantFunc = func(hostname string) (*b3lbadmin.Tenant, error) {
+				mock.GetTenantFunc = func(hostname string) (*bbsadmin.Tenant, error) {
 					return tenant, nil
 				}
 			},
 			Validator: func(t *testing.T, output *bytes.Buffer, err error) {
-				var value *b3lbadmin.Tenant
+				var value *bbsadmin.Tenant
 				if err := yaml.Unmarshal(output.Bytes(), &value); err != nil {
 					t.Fatal(err)
 					return

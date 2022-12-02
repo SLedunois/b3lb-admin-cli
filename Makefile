@@ -9,16 +9,16 @@ help:
 test.unit:
 	@echo "[TEST.UNIT] run unit tests and coverage"
 	@go test -race -covermode=atomic -coverprofile=coverage.out \
-		github.com/SLedunois/b3lbctl/pkg/cmd/root \
-		github.com/SLedunois/b3lbctl/pkg/cmd/get \
-		github.com/SLedunois/b3lbctl/pkg/cmd/clusterinfo \
-		github.com/SLedunois/b3lbctl/pkg/cmd/describe \
-		github.com/SLedunois/b3lbctl/pkg/admin \
-		github.com/SLedunois/b3lbctl/pkg/config \
-		github.com/SLedunois/b3lbctl/pkg/system
+		github.com/bigblueswarm/bbsctl/pkg/cmd/root \
+		github.com/bigblueswarm/bbsctl/pkg/cmd/get \
+		github.com/bigblueswarm/bbsctl/pkg/cmd/clusterinfo \
+		github.com/bigblueswarm/bbsctl/pkg/cmd/describe \
+		github.com/bigblueswarm/bbsctl/pkg/admin \
+		github.com/bigblueswarm/bbsctl/pkg/config \
+		github.com/bigblueswarm/bbsctl/pkg/system
 
-#build: @ build b3lb binary
+#build: @ build bbsctl binary
 build:
-	@echo "[BUILD] build b3lbctl binary"
+	@echo "[BUILD] build bbsctl binary"
 	rm -rf bin
-	go build -o ./bin/b3lbctl ./cmd/b3lbctl/main.go
+	go build -o ./bin/bbsctl ./cmd/bbsctl/main.go

@@ -3,9 +3,9 @@ package get
 import (
 	"fmt"
 
-	b3lbadmin "github.com/SLedunois/b3lb/v2/pkg/admin"
-	"github.com/SLedunois/b3lbctl/pkg/admin"
-	"github.com/SLedunois/b3lbctl/pkg/render"
+	"github.com/bigblueswarm/bbsctl/pkg/admin"
+	"github.com/bigblueswarm/bbsctl/pkg/render"
+	bbsadmin "github.com/bigblueswarm/bigblueswarm/v2/pkg/admin"
 	"github.com/jedib0t/go-pretty/v6/table"
 	"github.com/jedib0t/go-pretty/v6/text"
 	"github.com/spf13/cobra"
@@ -21,8 +21,8 @@ func NewTenantCmd() *cobra.Command {
 	cmd := &TenantsCmd{
 		Command: &cobra.Command{
 			Use:   "tenants [flags]",
-			Short: "Display all B3lb tenants available in your B3LB cluster",
-			Long:  "Display all B3lb tenants available in your B3LB cluster",
+			Short: "Display all BigBlueSwarm tenants available in your BigBlueSwarm cluster",
+			Long:  "Display all BigBlueSwarm tenants available in your BigBlueSwarm cluster",
 		},
 		Flags: NewFlags(),
 	}
@@ -55,7 +55,7 @@ func (cmd *TenantsCmd) list(command *cobra.Command, args []string) error {
 	return nil
 }
 
-func renderTenantsTable(cmd *cobra.Command, tenants *b3lbadmin.TenantList, csv bool) {
+func renderTenantsTable(cmd *cobra.Command, tenants *bbsadmin.TenantList, csv bool) {
 	t := table.NewWriter()
 	t.AppendHeader(table.Row{"Hostname", "Instances"})
 

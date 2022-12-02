@@ -4,7 +4,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/SLedunois/b3lb/v2/pkg/admin"
+	"github.com/bigblueswarm/bigblueswarm/v2/pkg/admin"
 	"github.com/stretchr/testify/assert"
 	"gopkg.in/yaml.v3"
 )
@@ -43,7 +43,7 @@ func TestToResource(t *testing.T) {
 				tenant := &admin.Tenant{
 					Kind:      "Tenant",
 					Instances: []string{},
-					Spec:      map[string]string{},
+					Spec:      &admin.TenantSpec{},
 				}
 
 				out, err := yaml.Marshal(tenant)

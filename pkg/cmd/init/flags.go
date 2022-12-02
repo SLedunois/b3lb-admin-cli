@@ -1,8 +1,8 @@
 package init
 
-// ConfigFlags represents `b3lbctl init config` flags
+// ConfigFlags represents `bbsctl init config` flags
 type ConfigFlags struct {
-	B3LB        string
+	BBS         string
 	APIKey      string
 	Destination string
 }
@@ -12,7 +12,7 @@ func NewInitConfigFlags() *ConfigFlags {
 	return &ConfigFlags{}
 }
 
-// InstancesFlags represents `b3lbctl init instances` flags
+// InstancesFlags represents `bbsctl init instances` flags
 type InstancesFlags struct {
 	Destination string
 }
@@ -22,7 +22,7 @@ func NewInitInstancesFlags() *InstancesFlags {
 	return &InstancesFlags{}
 }
 
-// TenantFlags represents `b3lbctl init tenant` flags
+// TenantFlags represents `bbsctl init tenant` flags
 type TenantFlags struct {
 	Hostname    string
 	Destination string

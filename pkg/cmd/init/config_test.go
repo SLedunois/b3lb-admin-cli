@@ -6,8 +6,8 @@ import (
 	"os"
 	"testing"
 
-	"github.com/SLedunois/b3lbctl/internal/test"
-	"github.com/SLedunois/b3lbctl/pkg/config"
+	"github.com/bigblueswarm/bbsctl/internal/test"
+	"github.com/bigblueswarm/bbsctl/pkg/config"
 	"gopkg.in/yaml.v3"
 
 	"github.com/stretchr/testify/assert"
@@ -20,7 +20,7 @@ func TestInitConfig(t *testing.T) {
 		return
 	}
 
-	os.Remove(fmt.Sprintf("%s/.b3lb", homedir))
+	os.Remove(fmt.Sprintf("%s/.bigblueswarm", homedir))
 
 	tests := []test.CmdTest{
 		{
@@ -28,7 +28,7 @@ func TestInitConfig(t *testing.T) {
 			Mock: func() {},
 			Args: []string{"-b", "http://localhost:8090", "-k", "api_key"},
 			Validator: func(t *testing.T, output *bytes.Buffer, err error) {
-				file := fmt.Sprintf("%s/.b3lb/.b3lbctl.yml", homedir)
+				file := fmt.Sprintf("%s/.bigblueswarm/.bbsctl.yml", homedir)
 				b, err := os.ReadFile(file)
 				if err != nil {
 					t.Fatal(err)
@@ -41,7 +41,7 @@ func TestInitConfig(t *testing.T) {
 					return
 				}
 
-				assert.Equal(t, "http://localhost:8090", conf.B3lb)
+				assert.Equal(t, "http://localhost:8090", conf.BBS)
 				assert.Equal(t, "api_key", conf.APIKey)
 			},
 		},
@@ -51,16 +51,16 @@ func TestInitConfig(t *testing.T) {
 			Args: []string{},
 			Validator: func(t *testing.T, output *bytes.Buffer, err error) {
 				assert.NotNil(t, err)
-				assert.Equal(t, fmt.Sprintf("configuration already exists, see %s/.b3lb/.b3lbctl.yml", homedir), err.Error())
+				assert.Equal(t, fmt.Sprintf("configuration already exists, see %s/.bigblueswarm/.bbsctl.yml", homedir), err.Error())
 			},
 		},
 		{
 			Name: "an error should be returned if I can't create a new folder",
 			Mock: func() {},
-			Args: []string{"-d", "/etc/b3lb"},
+			Args: []string{"-d", "/etc/bigblueswarm"},
 			Validator: func(t *testing.T, output *bytes.Buffer, err error) {
 				assert.NotNil(t, err)
-				assert.Equal(t, "unable to create destination folder: mkdir /etc/b3lb: permission denied", err.Error())
+				assert.Equal(t, "unable to create destination folder: mkdir /etc/bigblueswarm: permission denied", err.Error())
 			},
 		},
 	}

@@ -9,13 +9,12 @@ import (
 	"net/http"
 	"testing"
 
-	"github.com/SLedunois/b3lb/v2/pkg/admin"
-	b3lbadmin "github.com/SLedunois/b3lb/v2/pkg/admin"
-	"github.com/SLedunois/b3lb/v2/pkg/api"
-	"github.com/SLedunois/b3lb/v2/pkg/balancer"
-	b3lbconfig "github.com/SLedunois/b3lb/v2/pkg/config"
-	"github.com/SLedunois/b3lb/v2/pkg/restclient"
-	"github.com/SLedunois/b3lbctl/pkg/config"
+	"github.com/bigblueswarm/bbsctl/pkg/config"
+	bbsadmin "github.com/bigblueswarm/bigblueswarm/v2/pkg/admin"
+	"github.com/bigblueswarm/bigblueswarm/v2/pkg/api"
+	"github.com/bigblueswarm/bigblueswarm/v2/pkg/balancer"
+	bbsconfig "github.com/bigblueswarm/bigblueswarm/v2/pkg/config"
+	"github.com/bigblueswarm/bigblueswarm/v2/pkg/restclient"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -31,9 +30,8 @@ type test struct {
 func initTests() {
 	Init()
 	config.APIKey = &apiKey
-	config.B3LB = &instance
+	config.BBS = &instance
 	restclient.Client = &restclient.Mock{}
-
 }
 
 func TestList(t *testing.T) {
@@ -289,7 +287,7 @@ func TestClusterStatus(t *testing.T) {
 	}
 }
 
-func TestB3lbAPIStatus(t *testing.T) {
+func TestBBSAPIStatus(t *testing.T) {
 	initTests()
 	check := api.CreateHealthCheck()
 
@@ -368,7 +366,7 @@ func TestB3lbAPIStatus(t *testing.T) {
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
 			test.mock()
-			status, err := API.B3lbAPIStatus()
+			status, err := API.BBSAPIStatus()
 			test.validator(t, status, err)
 		})
 	}
@@ -376,8 +374,8 @@ func TestB3lbAPIStatus(t *testing.T) {
 
 func TestGetConfiguration(t *testing.T) {
 	initTests()
-	conf := &b3lbconfig.Config{
-		Admin: b3lbconfig.AdminConfig{
+	conf := &bbsconfig.Config{
+		Admin: bbsconfig.AdminConfig{
 			APIKey: "dummy_key",
 		},
 	}
@@ -425,7 +423,7 @@ func TestGetConfiguration(t *testing.T) {
 			},
 			validator: func(t *testing.T, value interface{}, err error) {
 				assert.NotNil(t, value)
-				conf := value.(*b3lbconfig.Config)
+				conf := value.(*bbsconfig.Config)
 				assert.Nil(t, err)
 				assert.Equal(t, "dummy_key", conf.Admin.APIKey)
 			},
@@ -443,9 +441,9 @@ func TestGetConfiguration(t *testing.T) {
 
 func TestGetTenants(t *testing.T) {
 	initTests()
-	tenants := &b3lbadmin.TenantList{
+	tenants := &bbsadmin.TenantList{
 		Kind:    "TenantList",
-		Tenants: []b3lbadmin.TenantListObject{},
+		Tenants: []bbsadmin.TenantListObject{},
 	}
 
 	tests := []test{
@@ -478,7 +476,7 @@ func TestGetTenants(t *testing.T) {
 			},
 			validator: func(t *testing.T, value interface{}, err error) {
 				assert.Nil(t, err)
-				assert.Equal(t, tenants, value.(*b3lbadmin.TenantList))
+				assert.Equal(t, tenants, value.(*bbsadmin.TenantList))
 			},
 		},
 	}
@@ -495,10 +493,10 @@ func TestGetTenants(t *testing.T) {
 func TestGetTena(t *testing.T) {
 	initTests()
 
-	tenant := &b3lbadmin.Tenant{
+	tenant := &bbsadmin.Tenant{
 		Kind: "Tenant",
-		Spec: map[string]string{
-			"host": "localhost",
+		Spec: &bbsadmin.TenantSpec{
+			Host: "localhost",
 		},
 		Instances: []string{},
 	}
@@ -528,7 +526,7 @@ func TestGetTena(t *testing.T) {
 			},
 		},
 		{
-			name: "a b3lb internal server error shoul return an error",
+			name: "a bigblueswarm internal server error shoul return an error",
 			mock: func() {
 				restclient.RestClientMockDoFunc = func(req *http.Request) (*http.Response, error) {
 					return &http.Response{
@@ -558,7 +556,7 @@ func TestGetTena(t *testing.T) {
 			},
 			validator: func(t *testing.T, value interface{}, err error) {
 				assert.Nil(t, err)
-				assert.Equal(t, tenant, value.(*b3lbadmin.Tenant))
+				assert.Equal(t, tenant, value.(*bbsadmin.Tenant))
 			},
 		},
 	}
@@ -593,13 +591,13 @@ func TestDeleteTenant(t *testing.T) {
 				restclient.RestClientMockDoFunc = func(req *http.Request) (*http.Response, error) {
 					return &http.Response{
 						StatusCode: http.StatusBadRequest,
-						Body:       ioutil.NopCloser(bytes.NewReader([]byte("b3lb error"))),
+						Body:       ioutil.NopCloser(bytes.NewReader([]byte("bigblueswarm error"))),
 					}, nil
 				}
 			},
 			validator: func(t *testing.T, value interface{}, err error) {
 				assert.NotNil(t, err)
-				assert.Equal(t, "unable to delete tenant: b3lb error", err.Error())
+				assert.Equal(t, "unable to delete tenant: bigblueswarm error", err.Error())
 			},
 		},
 		{
@@ -636,7 +634,7 @@ func TestApply(t *testing.T) {
 		{
 			name: "an error returned by restclient while applying InstanceList should be returned",
 			mock: func() {
-				resource = &admin.InstanceList{
+				resource = &bbsadmin.InstanceList{
 					Kind:      "InstanceList",
 					Instances: map[string]string{},
 				}
@@ -652,9 +650,9 @@ func TestApply(t *testing.T) {
 		{
 			name: "an error returned by restclient while applying Tenant should be returned",
 			mock: func() {
-				resource = &admin.Tenant{
+				resource = &bbsadmin.Tenant{
 					Kind:      "Tenant",
-					Spec:      map[string]string{},
+					Spec:      &bbsadmin.TenantSpec{},
 					Instances: []string{},
 				}
 				kind = "Tenant"
@@ -669,9 +667,9 @@ func TestApply(t *testing.T) {
 		{
 			name: "an http status != 201 - Created should return an error",
 			mock: func() {
-				resource = &admin.Tenant{
+				resource = &bbsadmin.Tenant{
 					Kind:      "Tenant",
-					Spec:      map[string]string{},
+					Spec:      &bbsadmin.TenantSpec{},
 					Instances: []string{},
 				}
 				kind = "Tenant"
@@ -688,9 +686,9 @@ func TestApply(t *testing.T) {
 		{
 			name: "a valid request should return no error",
 			mock: func() {
-				resource = &admin.Tenant{
+				resource = &bbsadmin.Tenant{
 					Kind:      "Tenant",
-					Spec:      map[string]string{},
+					Spec:      &bbsadmin.TenantSpec{},
 					Instances: []string{},
 				}
 				kind = "Tenant"

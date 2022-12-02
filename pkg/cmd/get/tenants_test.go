@@ -7,18 +7,18 @@ import (
 	"strings"
 	"testing"
 
-	b3lbadmin "github.com/SLedunois/b3lb/v2/pkg/admin"
+	bbsadmin "github.com/bigblueswarm/bigblueswarm/v2/pkg/admin"
 	"github.com/jedib0t/go-pretty/v6/text"
 	"github.com/stretchr/testify/assert"
 
-	"github.com/SLedunois/b3lbctl/internal/mock"
-	"github.com/SLedunois/b3lbctl/internal/test"
+	"github.com/bigblueswarm/bbsctl/internal/mock"
+	"github.com/bigblueswarm/bbsctl/internal/test"
 )
 
 func TestGetTenantsCmd(t *testing.T) {
-	expected := &b3lbadmin.TenantList{
+	expected := &bbsadmin.TenantList{
 		Kind: "TenantList",
-		Tenants: []b3lbadmin.TenantListObject{
+		Tenants: []bbsadmin.TenantListObject{
 			{
 				Hostname:      "localhost",
 				InstanceCount: 1,
@@ -32,7 +32,7 @@ func TestGetTenantsCmd(t *testing.T) {
 		{
 			Name: "an error thrown by admin should return an error",
 			Mock: func() {
-				mock.GetTenantsFunc = func() (*b3lbadmin.TenantList, error) {
+				mock.GetTenantsFunc = func() (*bbsadmin.TenantList, error) {
 					return nil, errors.New("admin error")
 				}
 			},
@@ -44,7 +44,7 @@ func TestGetTenantsCmd(t *testing.T) {
 		{
 			Name: "calling get tenants cmd with --json sould print result as json response",
 			Mock: func() {
-				mock.GetTenantsFunc = func() (*b3lbadmin.TenantList, error) {
+				mock.GetTenantsFunc = func() (*bbsadmin.TenantList, error) {
 					return expected, nil
 				}
 			},
@@ -59,7 +59,7 @@ func TestGetTenantsCmd(t *testing.T) {
 		{
 			Name: "calling get tenants cmd with --csv sould print result as csv response",
 			Mock: func() {
-				mock.GetTenantsFunc = func() (*b3lbadmin.TenantList, error) {
+				mock.GetTenantsFunc = func() (*bbsadmin.TenantList, error) {
 					return expected, nil
 				}
 			},
@@ -76,7 +76,7 @@ localhost,1`
 		{
 			Name: "calling get tenants cmd without flag sould print result as table response",
 			Mock: func() {
-				mock.GetTenantsFunc = func() (*b3lbadmin.TenantList, error) {
+				mock.GetTenantsFunc = func() (*bbsadmin.TenantList, error) {
 					return expected, nil
 				}
 			},

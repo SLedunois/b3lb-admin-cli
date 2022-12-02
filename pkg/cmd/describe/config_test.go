@@ -5,10 +5,10 @@ import (
 	"errors"
 	"testing"
 
-	b3lbconfig "github.com/SLedunois/b3lb/v2/pkg/config"
-	"github.com/SLedunois/b3lbctl/internal/mock"
-	"github.com/SLedunois/b3lbctl/internal/test"
-	"github.com/SLedunois/b3lbctl/pkg/admin"
+	"github.com/bigblueswarm/bbsctl/internal/mock"
+	"github.com/bigblueswarm/bbsctl/internal/test"
+	"github.com/bigblueswarm/bbsctl/pkg/admin"
+	bbsconfig "github.com/bigblueswarm/bigblueswarm/v2/pkg/config"
 	"github.com/stretchr/testify/assert"
 	"gopkg.in/yaml.v3"
 )
@@ -23,7 +23,7 @@ func TestDescribeConfigCmd(t *testing.T) {
 		{
 			Name: "an error return by admin get configuration method should return an error",
 			Mock: func() {
-				mock.GetConfigurationFunc = func() (*b3lbconfig.Config, error) {
+				mock.GetConfigurationFunc = func() (*bbsconfig.Config, error) {
 					return nil, errors.New("admin error")
 				}
 			},
@@ -34,14 +34,14 @@ func TestDescribeConfigCmd(t *testing.T) {
 		{
 			Name: "it should displays the configuration",
 			Mock: func() {
-				config := &b3lbconfig.Config{}
+				config := &bbsconfig.Config{}
 
-				mock.GetConfigurationFunc = func() (*b3lbconfig.Config, error) {
+				mock.GetConfigurationFunc = func() (*bbsconfig.Config, error) {
 					return config, nil
 				}
 			},
 			Validator: func(t *testing.T, output *bytes.Buffer, err error) {
-				out, err := yaml.Marshal(&b3lbconfig.Config{})
+				out, err := yaml.Marshal(&bbsconfig.Config{})
 				if err != nil {
 					t.Fatal(err)
 					return

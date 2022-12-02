@@ -5,15 +5,15 @@ import (
 	"os"
 	"path"
 
-	b3lbadmin "github.com/SLedunois/b3lb/v2/pkg/admin"
-	b3lbconfig "github.com/SLedunois/b3lb/v2/pkg/config"
+	bbsadmin "github.com/bigblueswarm/bigblueswarm/v2/pkg/admin"
+	bbsconfig "github.com/bigblueswarm/bigblueswarm/v2/pkg/config"
 	"github.com/spf13/cobra"
 	"gopkg.in/yaml.v3"
 )
 
 const tenantFileNameFormatter = "%s.tenant.yml"
 
-// TenantCmd represents the `b3lbctl init tenant` command
+// TenantCmd represents the `bbsctl init tenant` command
 type TenantCmd struct {
 	Command *cobra.Command
 	Flags   *TenantFlags
@@ -24,8 +24,8 @@ func NewInitTenantCmd() *cobra.Command {
 	cmd := &TenantCmd{
 		Command: &cobra.Command{
 			Use:   "tenant [flags]",
-			Short: "Initialize a new b3lb tenant configuration file",
-			Long:  "Initialize a new b3lb tenant configuration file if not exits",
+			Short: "Initialize a new bigblueswarm tenant configuration file",
+			Long:  "Initialize a new bigblueswarm tenant configuration file if not exits",
 			Run: func(cmd *cobra.Command, args []string) {
 				if len(args) == 0 {
 					cmd.Help()
@@ -45,7 +45,7 @@ func NewInitTenantCmd() *cobra.Command {
 
 // ApplyFlags apply command flags to InitInstancesCmd
 func (cmd *TenantCmd) ApplyFlags() {
-	cmd.Command.Flags().StringVarP(&cmd.Flags.Destination, "dest", "d", b3lbconfig.DefaultConfigFolder, "File folder destination")
+	cmd.Command.Flags().StringVarP(&cmd.Flags.Destination, "dest", "d", bbsconfig.DefaultConfigFolder, "File folder destination")
 	cmd.Command.Flags().StringVarP(&cmd.Flags.Hostname, "host", "", "", "Tenant hostname")
 	cmd.Command.MarkFlagRequired("host")
 }
@@ -57,10 +57,10 @@ func (cmd *TenantCmd) init(command *cobra.Command, args []string) error {
 		return fmt.Errorf("%s tenant file already exists. Please consider editing %s file", filename, destFile)
 	}
 
-	tenant := &b3lbadmin.Tenant{
+	tenant := &bbsadmin.Tenant{
 		Kind: "Tenant",
-		Spec: map[string]string{
-			"host": cmd.Flags.Hostname,
+		Spec: &bbsadmin.TenantSpec{
+			Host: cmd.Flags.Hostname,
 		},
 		Instances: []string{},
 	}

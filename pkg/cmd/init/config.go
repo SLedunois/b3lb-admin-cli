@@ -5,15 +5,15 @@ import (
 	"os"
 	"path"
 
-	b3lbconfig "github.com/SLedunois/b3lb/v2/pkg/config"
-	"github.com/SLedunois/b3lbctl/pkg/config"
+	"github.com/bigblueswarm/bbsctl/pkg/config"
+	bbsconfig "github.com/bigblueswarm/bigblueswarm/v2/pkg/config"
 	"github.com/spf13/cobra"
 	"gopkg.in/yaml.v3"
 )
 
 const fsRights = 0755
 
-// InitConfigCmd represents the `b3lbctl init config` command
+// InitConfigCmd represents the `bbsctl init config` command
 type InitConfigCmd struct {
 	Command *cobra.Command
 	Flags   *ConfigFlags
@@ -24,8 +24,8 @@ func NewInitConfigCmd() *cobra.Command {
 	cmd := &InitConfigCmd{
 		Command: &cobra.Command{
 			Use:   "config [flags]",
-			Short: "Initialize b3lbctl configuration",
-			Long:  "Create b3lbctl if not exists and initialize a basic configuration",
+			Short: "Initialize bbsctl configuration",
+			Long:  "Create bbsctl if not exists and initialize a basic configuration",
 		},
 		Flags: NewInitConfigFlags(),
 	}
@@ -40,9 +40,9 @@ func NewInitConfigCmd() *cobra.Command {
 
 // ApplyFlags apply command flags to InitConfigCmd
 func (cmd *InitConfigCmd) ApplyFlags() {
-	cmd.Command.Flags().StringVarP(&cmd.Flags.B3LB, "b3lb", "b", "", "B3lb url")
-	cmd.Command.Flags().StringVarP(&cmd.Flags.APIKey, "key", "k", "", "B3lb admin api key")
-	cmd.Command.Flags().StringVarP(&cmd.Flags.Destination, "dest", "d", b3lbconfig.DefaultConfigFolder, "Configuration file folder destination")
+	cmd.Command.Flags().StringVarP(&cmd.Flags.BBS, "bbs", "b", "", "BigBlueSwarm url")
+	cmd.Command.Flags().StringVarP(&cmd.Flags.APIKey, "key", "k", "", "BigBlueSwarm admin api key")
+	cmd.Command.Flags().StringVarP(&cmd.Flags.Destination, "dest", "d", bbsconfig.DefaultConfigFolder, "Configuration file folder destination")
 }
 
 func (cmd *InitConfigCmd) init(command *cobra.Command, args []string) error {
@@ -58,7 +58,7 @@ func (cmd *InitConfigCmd) init(command *cobra.Command, args []string) error {
 	}
 
 	conf := &config.Config{
-		B3lb:   cmd.Flags.B3LB,
+		BBS:    cmd.Flags.BBS,
 		APIKey: cmd.Flags.APIKey,
 	}
 

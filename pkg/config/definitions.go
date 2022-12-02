@@ -2,6 +2,6 @@ package config
 
 // Config represents the config file struct
 type Config struct {
-	B3lb   string `yaml:"b3lb"`
+	BBS    string `yaml:"bbs"`
 	APIKey string `yaml:"apiKey"`
 }

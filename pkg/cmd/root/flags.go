@@ -3,7 +3,7 @@ package root
 import (
 	"fmt"
 
-	"github.com/SLedunois/b3lbctl/pkg/config"
+	"github.com/bigblueswarm/bbsctl/pkg/config"
 	"github.com/spf13/viper"
 )
 

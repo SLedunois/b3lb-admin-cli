@@ -5,7 +5,7 @@ import (
 	"github.com/jedib0t/go-pretty/v6/text"
 )
 
-// TableStyle returns the b3lbctl table command style
+// TableStyle returns the bbsctl table command style
 func TableStyle() table.Style {
 	return table.Style{
 		Name: "Docker style",

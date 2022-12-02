@@ -5,7 +5,7 @@ import (
 	"io/ioutil"
 	"os"
 
-	"github.com/SLedunois/b3lbctl/pkg/admin"
+	"github.com/bigblueswarm/bbsctl/pkg/admin"
 	"github.com/spf13/cobra"
 	"gopkg.in/yaml.v3"
 )
@@ -21,8 +21,8 @@ func NewCmd() *cobra.Command {
 	cmd := &Cmd{
 		Command: &cobra.Command{
 			Use:   "apply -f [filepath]",
-			Short: "Apply a configuration to b3lb server using a file",
-			Long:  "Apply a configuration to b3lb server using a file",
+			Short: "Apply a configuration to bigblueswarm server using a file",
+			Long:  "Apply a configuration to bigblueswarm server using a file",
 		},
 		Flags: NewFlags(),
 	}

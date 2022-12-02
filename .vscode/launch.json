@@ -5,66 +5,66 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "b3lbctl init config",
+            "name": "bbsctl init config",
             "type": "go",
             "request": "launch",
             "mode": "auto",
-            "program": "cmd/b3lbctl/main.go",
+            "program": "cmd/bbsctl/main.go",
             "args": [
                 "init",
                 "config"
             ]
         },
         {
-            "name": "b3lbctl init instances",
+            "name": "bbsctl init instances",
             "type": "go",
             "request": "launch",
             "mode": "auto",
-            "program": "cmd/b3lbctl/main.go",
+            "program": "cmd/bbsctl/main.go",
             "args": [
                 "init",
                 "instances"
             ]
         },
         {
-            "name": "b3lbctl describe config",
+            "name": "bbsctl describe config",
             "type": "go",
             "request": "launch",
             "mode": "auto",
-            "program": "cmd/b3lbctl/main.go",
+            "program": "cmd/bbsctl/main.go",
             "args": [
                 "describe",
                 "config"
             ]
         },
         {
-            "name": "b3lbctl get instances",
+            "name": "bbsctl get instances",
             "type": "go",
             "request": "launch",
             "mode": "auto",
-            "program": "cmd/b3lbctl/main.go",
+            "program": "cmd/bbsctl/main.go",
             "args": [
                 "get",
                 "instances"
             ]
         },
         {
-            "name": "b3lbctl get tenants",
+            "name": "bbsctl get tenants",
             "type": "go",
             "request": "launch",
             "mode": "auto",
-            "program": "cmd/b3lbctl/main.go",
+            "program": "cmd/bbsctl/main.go",
             "args": [
                 "get",
                 "tenants"
             ]
         },
         {
-            "name": "b3lbctl describe tenant",
+            "name": "bbsctl describe tenant",
             "type": "go",
             "request": "launch",
             "mode": "auto",
-            "program": "cmd/b3lbctl/main.go",
+            "program": "cmd/bbsctl/main.go",
             "args": [
                 "describe",
                 "tenant",
@@ -72,15 +72,15 @@
             ]
         },
         {
-            "name": "b3lbctl apply instances",
+            "name": "bbsctl apply instances",
             "type": "go",
             "request": "launch",
             "mode": "auto",
-            "program": "cmd/b3lbctl/main.go",
+            "program": "cmd/bbsctl/main.go",
             "args": [
                 "apply",
                 "-f",
-                "/home/codespace/.b3lb/instances.yml"
+                "/home/codespace/.bigblueswarm/instances.yml"
             ]
         }
     ]

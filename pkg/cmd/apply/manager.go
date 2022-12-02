@@ -3,7 +3,7 @@ package apply
 import (
 	"errors"
 
-	"github.com/SLedunois/b3lb/v2/pkg/admin"
+	"github.com/bigblueswarm/bigblueswarm/v2/pkg/admin"
 	"gopkg.in/yaml.v3"
 )
 

@@ -1,11 +1,11 @@
 package mock
 
 import (
-	b3lbadmin "github.com/SLedunois/b3lb/v2/pkg/admin"
-	"github.com/SLedunois/b3lb/v2/pkg/api"
-	"github.com/SLedunois/b3lb/v2/pkg/balancer"
-	b3lbconfig "github.com/SLedunois/b3lb/v2/pkg/config"
-	"github.com/SLedunois/b3lbctl/pkg/admin"
+	"github.com/bigblueswarm/bbsctl/pkg/admin"
+	bbsadmin "github.com/bigblueswarm/bigblueswarm/v2/pkg/admin"
+	"github.com/bigblueswarm/bigblueswarm/v2/pkg/api"
+	"github.com/bigblueswarm/bigblueswarm/v2/pkg/balancer"
+	bbsconfig "github.com/bigblueswarm/bigblueswarm/v2/pkg/config"
 )
 
 var (
@@ -17,14 +17,14 @@ var (
 	DeleteAdminFunc func(url string) error
 	// ClusterStatusAdminFunc is the function that will be called when the mock admin is used
 	ClusterStatusAdminFunc func() ([]balancer.InstanceStatus, error)
-	// B3lbAPIStatusAdminFunc is the function that will be called when the mock admin is used
-	B3lbAPIStatusAdminFunc func() (string, error)
+	// BBSAPIStatusAdminFunc is the function that will be called when the mock admin is used
+	BBSAPIStatusAdminFunc func() (string, error)
 	// GetConfigurationFunc is the function that will be called when the mock admin is used
-	GetConfigurationFunc func() (*b3lbconfig.Config, error)
+	GetConfigurationFunc func() (*bbsconfig.Config, error)
 	// GetTenantsFunc is the function that will be called when the mock admin is used
-	GetTenantsFunc func() (*b3lbadmin.TenantList, error)
+	GetTenantsFunc func() (*bbsadmin.TenantList, error)
 	// GetTenantFunc is the function that will be called when the mock admin is used
-	GetTenantFunc func(hostname string) (*b3lbadmin.Tenant, error)
+	GetTenantFunc func(hostname string) (*bbsadmin.Tenant, error)
 	// DeleteTenantFunc is the function that will be called whtne the admin mock is used
 	DeleteTenantFunc func(hostname string) error
 	// ApplyFunc is the function that will be called when the admin mock is used
@@ -44,12 +44,12 @@ func (a *AdminMock) List() ([]api.BigBlueButtonInstance, error) {
 	return ListAdminFunc()
 }
 
-// Add is a mock implementation that add a bigbluebutton instance on b3lb
+// Add is a mock implementation that add a bigbluebutton instance on BigBlueSwarm
 func (a *AdminMock) Add(url string, secret string) error {
 	return AddAdminFunc(url, secret)
 }
 
-// Delete is a mock implementation deleting a bigbluebutton instance on b3lb
+// Delete is a mock implementation deleting a bigbluebutton instance on BigBlueSwarm
 func (a *AdminMock) Delete(url string) error {
 	return DeleteAdminFunc(url)
 }
@@ -59,23 +59,23 @@ func (a *AdminMock) ClusterStatus() ([]balancer.InstanceStatus, error) {
 	return ClusterStatusAdminFunc()
 }
 
-// B3lbAPIStatus is a mock implementation returning a list of InstanceStatus
-func (a *AdminMock) B3lbAPIStatus() (string, error) {
-	return B3lbAPIStatusAdminFunc()
+// BBSAPIStatus is a mock implementation returning a list of InstanceStatus
+func (a *AdminMock) BBSAPIStatus() (string, error) {
+	return BBSAPIStatusAdminFunc()
 }
 
 // GetConfigurations is a mock implementation returning the configuration
-func (a *AdminMock) GetConfiguration() (*b3lbconfig.Config, error) {
+func (a *AdminMock) GetConfiguration() (*bbsconfig.Config, error) {
 	return GetConfigurationFunc()
 }
 
 // GetTenants is a mock implementation return a TenantList
-func (a *AdminMock) GetTenants() (*b3lbadmin.TenantList, error) {
+func (a *AdminMock) GetTenants() (*bbsadmin.TenantList, error) {
 	return GetTenantsFunc()
 }
 
 // GetTenant is a mock implementation that return a given tenant as kind Tenant
-func (a *AdminMock) GetTenant(hostname string) (*b3lbadmin.Tenant, error) {
+func (a *AdminMock) GetTenant(hostname string) (*bbsadmin.Tenant, error) {
 	return GetTenantFunc(hostname)
 }
 

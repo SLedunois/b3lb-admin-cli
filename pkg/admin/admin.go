@@ -9,12 +9,12 @@ import (
 	"net/http"
 	"net/url"
 
-	b3lbadmin "github.com/SLedunois/b3lb/v2/pkg/admin"
-	"github.com/SLedunois/b3lb/v2/pkg/api"
-	"github.com/SLedunois/b3lb/v2/pkg/balancer"
-	b3lbconfig "github.com/SLedunois/b3lb/v2/pkg/config"
-	"github.com/SLedunois/b3lb/v2/pkg/restclient"
-	"github.com/SLedunois/b3lbctl/pkg/config"
+	"github.com/bigblueswarm/bbsctl/pkg/config"
+	bbsadmin "github.com/bigblueswarm/bigblueswarm/v2/pkg/admin"
+	"github.com/bigblueswarm/bigblueswarm/v2/pkg/api"
+	"github.com/bigblueswarm/bigblueswarm/v2/pkg/balancer"
+	bbsconfig "github.com/bigblueswarm/bigblueswarm/v2/pkg/config"
+	"github.com/bigblueswarm/bigblueswarm/v2/pkg/restclient"
 )
 
 // API is a public DefaultAdmin instance
@@ -28,10 +28,10 @@ type Admin interface {
 	Add(url string, secret string) error
 	Delete(instance string) error
 	ClusterStatus() ([]balancer.InstanceStatus, error)
-	B3lbAPIStatus() (string, error)
-	GetConfiguration() (*b3lbconfig.Config, error)
-	GetTenants() (*b3lbadmin.TenantList, error)
-	GetTenant(hostname string) (*b3lbadmin.Tenant, error)
+	BBSAPIStatus() (string, error)
+	GetConfiguration() (*bbsconfig.Config, error)
+	GetTenants() (*bbsadmin.TenantList, error)
+	GetTenant(hostname string) (*bbsadmin.Tenant, error)
 	DeleteTenant(hostname string) error
 	Apply(king string, resource *interface{}) error
 }
@@ -50,9 +50,9 @@ func authorization() map[string]string {
 	}
 }
 
-// List performs a list admin call on b3lb
+// List performs a list admin call on bigblueswarm
 func (a *DefaultAdmin) List() ([]api.BigBlueButtonInstance, error) {
-	url := fmt.Sprintf(urlFormatter, *config.B3LB)
+	url := fmt.Sprintf(urlFormatter, *config.BBS)
 	resp, err := restclient.GetWithHeaders(url, authorization())
 	if err != nil {
 		return nil, err
@@ -71,9 +71,9 @@ func (a *DefaultAdmin) List() ([]api.BigBlueButtonInstance, error) {
 	return instances, nil
 }
 
-// Add performs a add admin call on b3lb
+// Add performs a add admin call on bigblueswarm
 func (a *DefaultAdmin) Add(url string, secret string) error {
-	apiURL := fmt.Sprintf(urlFormatter, *config.B3LB)
+	apiURL := fmt.Sprintf(urlFormatter, *config.BBS)
 	instance := api.BigBlueButtonInstance{
 		URL:    url,
 		Secret: secret,
@@ -94,9 +94,9 @@ func (a *DefaultAdmin) Add(url string, secret string) error {
 	return restErr
 }
 
-// Delete performs a delete admin call on B3LB
+// Delete performs a delete admin call on BigBlueSwarm
 func (a *DefaultAdmin) Delete(instance string) error {
-	apiURL := fmt.Sprintf(urlFormatter+"?url=%s", *config.B3LB, url.QueryEscape(instance))
+	apiURL := fmt.Sprintf(urlFormatter+"?url=%s", *config.BBS, url.QueryEscape(instance))
 	resp, restErr := restclient.DeleteWithHeaders(apiURL, authorization())
 	if restErr != nil {
 		return restErr
@@ -115,7 +115,7 @@ func (a *DefaultAdmin) Delete(instance string) error {
 
 // ClusterStatus call cluster status admin api and return result
 func (a *DefaultAdmin) ClusterStatus() ([]balancer.InstanceStatus, error) {
-	resp, err := restclient.GetWithHeaders(fmt.Sprintf("%s/admin/api/cluster", *config.B3LB), authorization())
+	resp, err := restclient.GetWithHeaders(fmt.Sprintf("%s/admin/api/cluster", *config.BBS), authorization())
 	if err != nil {
 		return nil, err
 	}
@@ -133,9 +133,9 @@ func (a *DefaultAdmin) ClusterStatus() ([]balancer.InstanceStatus, error) {
 	return status, nil
 }
 
-// B3lbAPIStatus returns the b3lb pi status
-func (a *DefaultAdmin) B3lbAPIStatus() (string, error) {
-	resp, err := restclient.Get(fmt.Sprintf("%s/bigbluebutton/api", *config.B3LB))
+// BBSAPIStatus returns the bigblueswarm pi status
+func (a *DefaultAdmin) BBSAPIStatus() (string, error) {
+	resp, err := restclient.Get(fmt.Sprintf("%s/bigbluebutton/api", *config.BBS))
 	if err != nil {
 		return "", err
 	}
@@ -157,9 +157,9 @@ func (a *DefaultAdmin) B3lbAPIStatus() (string, error) {
 	return "Down", nil
 }
 
-// GetConfiguration return b3lb configuration
-func (a *DefaultAdmin) GetConfiguration() (*b3lbconfig.Config, error) {
-	resp, err := restclient.GetWithHeaders(fmt.Sprintf("%s/admin/api/configurations", *config.B3LB), authorization())
+// GetConfiguration return bigblueswarm configuration
+func (a *DefaultAdmin) GetConfiguration() (*bbsconfig.Config, error) {
+	resp, err := restclient.GetWithHeaders(fmt.Sprintf("%s/admin/api/configurations", *config.BBS), authorization())
 	if err != nil {
 		return nil, err
 	}
@@ -169,7 +169,7 @@ func (a *DefaultAdmin) GetConfiguration() (*b3lbconfig.Config, error) {
 		return nil, err
 	}
 
-	var config *b3lbconfig.Config
+	var config *bbsconfig.Config
 	if err := json.Unmarshal(res, &config); err != nil {
 		return nil, err
 	}
@@ -177,9 +177,9 @@ func (a *DefaultAdmin) GetConfiguration() (*b3lbconfig.Config, error) {
 	return config, nil
 }
 
-// GetTenants return B3lb active tenants
-func (a *DefaultAdmin) GetTenants() (*b3lbadmin.TenantList, error) {
-	resp, err := restclient.GetWithHeaders(fmt.Sprintf("%s/admin/api/tenants", *config.B3LB), authorization())
+// GetTenants return bigblueswarm active tenants
+func (a *DefaultAdmin) GetTenants() (*bbsadmin.TenantList, error) {
+	resp, err := restclient.GetWithHeaders(fmt.Sprintf("%s/admin/api/tenants", *config.BBS), authorization())
 	if err != nil {
 		return nil, err
 	}
@@ -189,7 +189,7 @@ func (a *DefaultAdmin) GetTenants() (*b3lbadmin.TenantList, error) {
 		return nil, err
 	}
 
-	var tenants *b3lbadmin.TenantList
+	var tenants *bbsadmin.TenantList
 	if err := json.Unmarshal(res, &tenants); err != nil {
 		return nil, err
 	}
@@ -198,8 +198,8 @@ func (a *DefaultAdmin) GetTenants() (*b3lbadmin.TenantList, error) {
 }
 
 // GetTenant return a specific tenant as kind Tenant
-func (a *DefaultAdmin) GetTenant(hostname string) (*b3lbadmin.Tenant, error) {
-	resp, err := restclient.GetWithHeaders(fmt.Sprintf("%s/admin/api/tenants/%s", *config.B3LB, hostname), authorization())
+func (a *DefaultAdmin) GetTenant(hostname string) (*bbsadmin.Tenant, error) {
+	resp, err := restclient.GetWithHeaders(fmt.Sprintf("%s/admin/api/tenants/%s", *config.BBS, hostname), authorization())
 	if err != nil {
 		return nil, err
 	}
@@ -209,7 +209,7 @@ func (a *DefaultAdmin) GetTenant(hostname string) (*b3lbadmin.Tenant, error) {
 	}
 
 	if resp.StatusCode == http.StatusInternalServerError {
-		return nil, errors.New("b3lb internal error. Please check your b3lb instance")
+		return nil, errors.New("bigblueswarm internal error. Please check your bigblueswarm instance")
 	}
 
 	res, err := ioutil.ReadAll(resp.Body)
@@ -217,7 +217,7 @@ func (a *DefaultAdmin) GetTenant(hostname string) (*b3lbadmin.Tenant, error) {
 		return nil, err
 	}
 
-	var tenant *b3lbadmin.Tenant
+	var tenant *bbsadmin.Tenant
 	if err := json.Unmarshal(res, &tenant); err != nil {
 		return nil, err
 	}
@@ -225,9 +225,9 @@ func (a *DefaultAdmin) GetTenant(hostname string) (*b3lbadmin.Tenant, error) {
 	return tenant, nil
 }
 
-// DeleteTenant delete given tenant from b3lb cluster
+// DeleteTenant delete given tenant from bigblueswarm cluster
 func (a *DefaultAdmin) DeleteTenant(hostname string) error {
-	resp, err := restclient.DeleteWithHeaders(fmt.Sprintf("%s/admin/api/tenants/%s", *config.B3LB, hostname), authorization())
+	resp, err := restclient.DeleteWithHeaders(fmt.Sprintf("%s/admin/api/tenants/%s", *config.BBS, hostname), authorization())
 	if err != nil {
 		return err
 	}
@@ -235,7 +235,7 @@ func (a *DefaultAdmin) DeleteTenant(hostname string) error {
 	if resp.StatusCode != http.StatusNoContent {
 		res, err := ioutil.ReadAll(resp.Body)
 		if err != nil {
-			return fmt.Errorf("b3lb respond with an unreadable error: %s", err.Error())
+			return fmt.Errorf("bigblueswarm respond with an unreadable error: %s", err.Error())
 		}
 
 		return fmt.Errorf("unable to delete tenant: %s", string(res))
@@ -244,14 +244,14 @@ func (a *DefaultAdmin) DeleteTenant(hostname string) error {
 	return nil
 }
 
-// Apply applies a resource to b3lb cluster
+// Apply applies a resource to bigblueswarm cluster
 func (a *DefaultAdmin) Apply(kind string, resource *interface{}) error {
 	var url string
 
 	if kind == "InstanceList" {
-		url = fmt.Sprintf("%s/admin/api/instances", *config.B3LB)
+		url = fmt.Sprintf("%s/admin/api/instances", *config.BBS)
 	} else {
-		url = fmt.Sprintf("%s/admin/api/tenants", *config.B3LB)
+		url = fmt.Sprintf("%s/admin/api/tenants", *config.BBS)
 	}
 
 	b, err := json.Marshal(resource)
@@ -265,7 +265,7 @@ func (a *DefaultAdmin) Apply(kind string, resource *interface{}) error {
 	}
 
 	if resp.StatusCode != http.StatusCreated {
-		return fmt.Errorf("b3lb returns a %d status instead of %d", resp.StatusCode, http.StatusCreated)
+		return fmt.Errorf("bigblueswarm returns a %d status instead of %d", resp.StatusCode, http.StatusCreated)
 	}
 
 	return nil

@@ -5,16 +5,16 @@ import (
 	"os"
 	"strings"
 
-	"github.com/SLedunois/b3lb/v2/pkg/restclient"
-	"github.com/SLedunois/b3lbctl/pkg/admin"
-	"github.com/SLedunois/b3lbctl/pkg/cmd/apply"
-	"github.com/SLedunois/b3lbctl/pkg/cmd/clusterinfo"
-	"github.com/SLedunois/b3lbctl/pkg/cmd/delete"
-	configcmd "github.com/SLedunois/b3lbctl/pkg/cmd/describe"
-	"github.com/SLedunois/b3lbctl/pkg/cmd/get"
-	initcmd "github.com/SLedunois/b3lbctl/pkg/cmd/init"
-	"github.com/SLedunois/b3lbctl/pkg/config"
-	"github.com/SLedunois/b3lbctl/pkg/system"
+	"github.com/bigblueswarm/bbsctl/pkg/admin"
+	"github.com/bigblueswarm/bbsctl/pkg/cmd/apply"
+	"github.com/bigblueswarm/bbsctl/pkg/cmd/clusterinfo"
+	"github.com/bigblueswarm/bbsctl/pkg/cmd/delete"
+	configcmd "github.com/bigblueswarm/bbsctl/pkg/cmd/describe"
+	"github.com/bigblueswarm/bbsctl/pkg/cmd/get"
+	initcmd "github.com/bigblueswarm/bbsctl/pkg/cmd/init"
+	"github.com/bigblueswarm/bbsctl/pkg/config"
+	"github.com/bigblueswarm/bbsctl/pkg/system"
+	"github.com/bigblueswarm/bigblueswarm/v2/pkg/restclient"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -25,7 +25,7 @@ type RootCmd struct {
 	Flags   *Flags
 }
 
-// IsInitCommand returns true if the command is `b3lbctl init config`
+// IsInitCommand returns true if the command is `bbsctl init config`
 func IsInitCommand() bool {
 	return strings.Contains(strings.Join(os.Args, ""), "init")
 }
@@ -46,9 +46,9 @@ func NewCmd() *cobra.Command {
 
 	cmd := &RootCmd{
 		Command: &cobra.Command{
-			Use:   "b3lbctl <command> [flags]",
-			Short: "B3LB controller cli",
-			Long:  `Manage your B3LB cluster from the command line`,
+			Use:   "bbsctl <command> [flags]",
+			Short: "BigBlueSwarm controller cli",
+			Long:  `Manage your BigBlueSwarm cluster from the command line`,
 			Run: func(cmd *cobra.Command, args []string) {
 				if len(args) == 0 {
 					cmd.Help()

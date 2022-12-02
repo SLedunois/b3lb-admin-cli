@@ -3,8 +3,8 @@ package main
 import (
 	"os"
 
-	"github.com/SLedunois/b3lbctl/pkg/cmd/root"
-	"github.com/SLedunois/b3lbctl/pkg/system"
+	"github.com/bigblueswarm/bbsctl/pkg/cmd/root"
+	"github.com/bigblueswarm/bbsctl/pkg/system"
 )
 
 func main() {

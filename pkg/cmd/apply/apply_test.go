@@ -7,9 +7,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/SLedunois/b3lb/v2/pkg/admin"
-	"github.com/SLedunois/b3lbctl/internal/mock"
-	"github.com/SLedunois/b3lbctl/internal/test"
+	"github.com/bigblueswarm/bbsctl/internal/mock"
+	"github.com/bigblueswarm/bbsctl/internal/test"
+	"github.com/bigblueswarm/bigblueswarm/v2/pkg/admin"
 	"github.com/stretchr/testify/assert"
 	"gopkg.in/yaml.v3"
 )
@@ -71,7 +71,7 @@ func TestNewCmd(t *testing.T) {
 			Mock: func() {
 				instances := &admin.Tenant{
 					Kind:      "Tenant",
-					Spec:      map[string]string{},
+					Spec:      &admin.TenantSpec{},
 					Instances: []string{},
 				}
 

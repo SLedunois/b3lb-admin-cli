@@ -4,7 +4,7 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/SLedunois/b3lbctl/pkg/admin"
+	"github.com/bigblueswarm/bbsctl/pkg/admin"
 	"github.com/spf13/cobra"
 	"gopkg.in/yaml.v3"
 )
@@ -21,7 +21,7 @@ func NewTenantCmd() *cobra.Command {
 		Command: &cobra.Command{
 			Use:   "tenant <hostname>",
 			Short: "Describe B3L tenant.",
-			Long:  "Describe a given B3LB tenant.",
+			Long:  "Describe a given BigBlueSwarm tenant.",
 		},
 		Flags: NewTenantFlags(),
 	}

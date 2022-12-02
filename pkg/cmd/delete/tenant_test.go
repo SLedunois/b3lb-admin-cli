@@ -6,9 +6,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/SLedunois/b3lbctl/internal/mock"
-	"github.com/SLedunois/b3lbctl/internal/test"
-	"github.com/SLedunois/b3lbctl/pkg/admin"
+	"github.com/bigblueswarm/bbsctl/internal/mock"
+	"github.com/bigblueswarm/bbsctl/internal/test"
+	"github.com/bigblueswarm/bbsctl/pkg/admin"
 	"github.com/stretchr/testify/assert"
 )
 
