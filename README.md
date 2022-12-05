@@ -1,33 +1,35 @@
-# bbsctl
+<p align="center">
+<img src="assets/bbsctl.png" alt="logo" />
+</p>
 
-[![Codacy Badge](https://app.codacy.com/project/badge/Grade/487a9c5102c8465ebbfd36ca1b62194e)](https://www.codacy.com/gh/SLedunois/b3lbctl/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=SLedunois/b3lbctl&amp;utm_campaign=Badge_Grade)
-[![Codacy Badge](https://app.codacy.com/project/badge/Coverage/487a9c5102c8465ebbfd36ca1b62194e)](https://www.codacy.com/gh/SLedunois/b3lbctl/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=SLedunois/b3lbctl&amp;utm_campaign=Badge_Coverage)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/1958ff373bdb47659cb97888992b322b)](https://www.codacy.com/gh/bigblueswarm/bbsctl/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=bigblueswarm/bbsctl&amp;utm_campaign=Badge_Grade)
+[![Codacy Badge](https://app.codacy.com/project/badge/Coverage/1958ff373bdb47659cb97888992b322b)](https://www.codacy.com/gh/bigblueswarm/bbsctl/dashboard?utm_source=github.com&utm_medium=referral&utm_content=bigblueswarm/bbsctl&utm_campaign=Badge_Coverage)
 [![Code linting](https://github.com/bigblueswarm/bbsctl/actions/workflows/lint.yml/badge.svg)](https://github.com/SLedunois/b3lbctl/actions/workflows/lint.yml)
 [![Unit tests](https://github.com/bigblueswarm/bbsctl/actions/workflows/unit_test.yml/badge.svg)](https://github.com/SLedunois/b3lbctl/actions/workflows/unit_test.yml)
 ![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/bigblueswarm/bbsctl)
 ![GitHub](https://img.shields.io/github/license/bigblueswarm/bbsctl)
 
-The b3lbctl command line tool lets you control [b3lb](https://github.com/SLedunois/b3lb) clusters.
+The bbsctl command line tool lets you control [BigBlueSwarm](https://github.com/bigblueswarm/bigblueswarm) clusters.
 
-For configuration, b3lbctl looks for a file named config in the `$HOME/.b3lb.yaml` directory. You can specify other b3blconfig files by setting the `--config` flag.
+For configuration, bbsctl looks for a file named config in the `$HOME/.bigblueswarm/.bbsctl.yml` directory. You can specify other bbsctl files by setting the `--config` flag.
 
 ## Installation
 
-Download last release from [release page](https://github.com/SLedunois/b3lbctl/releases).
+Download last release from [release page](https://github.com/bigblueswarm/bbsctl/releases).
 
 Copy the binary into `/usr/local/bin`.
 
 ## Usage
 
 ```bash
-Manage your B3LB cluster from the command line
+Manage your BigBlueSwarm cluster from the command line
 
 Usage:
-  b3lbctl <command> [flags]
-  b3lbctl [command]
+  bbsctl <command> [flags]
+  bbsctl [command]
 
 Available Commands:
-  apply        Apply a configuration to b3lb server using a file
+  apply        Apply a configuration to bigblueswarm server using a file
   cluster-info Get overall cluster information
   completion   Generate the autocompletion script for the specified shell
   delete       Delete a specific resource
@@ -37,62 +39,62 @@ Available Commands:
   init         Initialize a resource
 
 Flags:
-      --config string   config file (default is $HOME/.b3lb/.b3lbctl.yml) (default "$HOME/.b3lb/.b3lbctl.yml")
-  -h, --help            help for b3lbctl
+      --config string   config file (default is $HOME/.bigblueswarm/.bbsctl.yml) (default "$HOME/.bigblueswarm/.bbsctl.yml")
+  -h, --help            help for bbsctl
 
-Use "b3lbctl [command] --help" for more information about a command.
+Use "bbsctl [command] --help" for more information about a command.
 ```
 
 ### Init configuration
 Use `b3lbctl init config` to initialize `b3lbctl` configuration.
 ```bash
-Create b3lbctl if not exists and initialize a basic configuration
+Create bbsctl if not exists and initialize a basic configuration
 
 Usage:
-  b3lbctl init config [flags]
+  bbsctl init config [flags]
 
 Flags:
-  -b, --b3lb string   B3lb url
-  -d, --dest string   Configuration file folder destination (default "$HOME/.b3lb")
+  -b, --bbs string    BigBlueSwarm url
+  -d, --dest string   Configuration file folder destination (default "$HOME/.bigblueswarm")
   -h, --help          help for config
-  -k, --key string    B3lb admin api key
+  -k, --key string    BigBlueSwarm admin api key
 ```
-[![asciicast](https://asciinema.org/a/489335.svg)](https://asciinema.org/a/489335)
+<a href="https://asciinema.org/a/2qz4H250QCzMCbioMqEsnkuVE" target="_blank"><img src="https://asciinema.org/a/2qz4H250QCzMCbioMqEsnkuVE.svg" height="300" /></a>
 
 
 ### Manage instances
-`b3lbctl` provide some command to manage your cluster instances:
-- `b3lbctl init instances` that create instances file if it does not exists
+`bbsctl` provide some command to manage your cluster instances:
+- `bbsctl init instances` that create instances file if it does not exists
 ```bash
 Create instances list file if it does not exists
 
 Usage:
-  b3lbctl init instances [flags]
+  bbsctl init instances [flags]
 
 Flags:
-  -d, --dest string   File folder destination (default "$HOME/.b3lb")
+  -d, --dest string   File folder destination (default "$HOME/.bigblueswarm")
   -h, --help          help for instances
 ```
 - `b3lbctl apply -f instances.yml`
 ```bash
-Apply a configuration to b3lb server using a file
+Apply a configuration to bigblueswarm server using a file
 
 Usage:
-  b3lbctl apply -f [filepath] [flags]
+  bbsctl apply -f [filepath] [flags]
 
 Flags:
   -f, --file string   resource file path
   -h, --help          help for apply
 
 Global Flags:
-      --config string   config file (default is $HOME/.b3lb/.b3lbctl.yml) (default "$HOME/.b3lb/.b3lbctl.yml")
+      --config string   config file (default is $HOME/.bigblueswarm/.bbsctl.yml) (default "$HOME/.bigblueswarm/.bbsctl.yml")
 ```
 - `b3lbctl get instances` display all BigBlueButton instances found in your B3lb cluster
 ```bash
-Display all BigBlueButton instances available in your B3LB cluster
+Display all BigBlueButton instances available in your BigBlueSwarm cluster
 
 Usage:
-  b3lbctl get instances [flags]
+  bbsctl get instances [flags]
 
 Flags:
   -c, --csv    csv output
@@ -100,44 +102,44 @@ Flags:
   -j, --json   json output
 
 Global Flags:
-      --config string   config file (default is $HOME/.b3lb/.b3lbctl.yml) (default "$HOME/.b3lb/.b3lbctl.yml")
+      --config string   config file (default is $HOME/.bigblueswarm/.bbsctl.yml) (default "$HOME/.bigblueswarm/.bbsctl.yml")
 ```
-[![asciicast](https://asciinema.org/a/489340.svg)](https://asciinema.org/a/489340)
+<a href="https://asciinema.org/a/nlueByPpY8E9g7DElk85jRcqH" target="_blank"><img src="https://asciinema.org/a/nlueByPpY8E9g7DElk85jRcqH.svg" height="300" /></a>
 
 ### Manage tenants
 B3lb is a multi tenant load balancer and `b3lbctl` offer tools to manage tenants.
 - `b3lbctl init tenant` initialize a tenant file
 ```bash
-Initialize a new b3lb tenant configuration file if not exits
+Initialize a new bigblueswarm tenant configuration file if not exits
 
 Usage:
-  b3lbctl init tenant [flags]
+  bbsctl init tenant [flags]
 
 Flags:
-  -d, --dest string   File folder destination (default "$HOME/.b3lb")
+  -d, --dest string   File folder destination (default "$HOME/.bigblueswarm")
   -h, --help          help for tenant
       --host string   Tenant hostname
 ```
 - `b3lbctl apply -f tenant.yml`
 ```bash
-Apply a configuration to b3lb server using a file
+Apply a configuration to bigblueswarm server using a file
 
 Usage:
-  b3lbctl apply -f [filepath] [flags]
+  bbsctl apply -f [filepath] [flags]
 
 Flags:
   -f, --file string   resource file path
   -h, --help          help for apply
 
 Global Flags:
-      --config string   config file (default is $HOME/.b3lb/.b3lbctl.yml) (default "$HOME/.b3lb/.b3lbctl.yml")
+      --config string   config file (default is $HOME/.bigblueswarm/.bbsctl.yml) (default "$HOME/.bigblueswarm/.bbsctl.yml")
 ```
 - `b3lbctl get tenants` display all tenants found in B3lb cluster
 ```bash
-Display all B3lb tenants available in your B3LB cluster
+Display all BigBlueSwarm tenants available in your BigBlueSwarm cluster
 
 Usage:
-  b3lbctl get tenants [flags]
+  bbsctl get tenants [flags]
 
 Flags:
   -c, --csv    csv output
@@ -145,22 +147,22 @@ Flags:
   -j, --json   json output
 
 Global Flags:
-      --config string   config file (default is $HOME/.b3lb/.b3lbctl.yml) (default "$HOME/.b3lb/.b3lbctl.yml")
+      --config string   config file (default is $HOME/.bigblueswarm/.bbsctl.yml) (default "$HOME/.bigblueswarm/.bbsctl.yml")
 ```
 - `b3lbctl describe tenant` describe a tenant
 ```bash
-Describe a given B3LB tenant.
+Describe a given BigBlueSwarm tenant.
 
 Usage:
-  b3lbctl describe tenant <hostname> [flags]
+  bbsctl describe tenant <hostname> [flags]
 
 Flags:
   -h, --help   help for tenant
 
 Global Flags:
-      --config string   config file (default is $HOME/.b3lb/.b3lbctl.yml) (default "$HOME/.b3lb/.b3lbctl.yml")
+      --config string   config file (default is $HOME/.bigblueswarm/.bbsctl.yml) (default "$HOME/.bigblueswarm/.bbsctl.yml")
 ```
-[![asciicast](https://asciinema.org/a/489344.svg)](https://asciinema.org/a/489344)
+<a href="https://asciinema.org/a/gB55DijzRQCl40or7bgpa3sv5" target="_blank"><img src="https://asciinema.org/a/gB55DijzRQCl40or7bgpa3sv5.svg" height="300" /></a>
 
 ### Check your cluster
 `b3lbctl` let you monitor your cluster using `cluster-info` command.
@@ -168,15 +170,15 @@ Global Flags:
 Get overall cluster information. It display all instances with %CPU, %MEM, Active meetings, Active paricipants and API status
 
 Usage:
-  b3lbctl cluster-info [flags]
+  bbsctl cluster-info [flags]
 
 Flags:
   -h, --help   help for cluster-info
 
 Global Flags:
-      --config string   config file (default is $HOME/.b3lb/.b3lbctl.yml) (default "$HOME/.b3lb/.b3lbctl.yml")
+      --config string   config file (default is $HOME/.bigblueswarm/.bbsctl.yml) (default "$HOME/.bigblueswarm/.bbsctl.yml")
 ``` 
-[![asciicast](https://asciinema.org/a/489346.svg)](https://asciinema.org/a/489346)
+<a href="https://asciinema.org/a/Nqec46FDprZpUzbP43oa940Xb" target="_blank"><img src="https://asciinema.org/a/Nqec46FDprZpUzbP43oa940Xb.svg" height="300" /></a>
 
 ### Check B3lb configuration
 `b3lbctl` let you check your b3lb application configuration remotely. Even if you use a configuration file or consul provider, `b3lbctl` display your application configuration using `describe config` command.
@@ -192,4 +194,4 @@ Flags:
 Global Flags:
       --config string   config file (default is $HOME/.b3lb/.b3lbctl.yml) (default "$HOME/.b3lb/.b3lbctl.yml")
 ```
-[![asciicast](https://asciinema.org/a/489345.svg)](https://asciinema.org/a/489345)
+<a href="https://asciinema.org/a/idAmn6AjWZIh77x1oWcaK8Yiv" target="_blank"><img src="https://asciinema.org/a/idAmn6AjWZIh77x1oWcaK8Yiv.svg" height="300" /></a>
