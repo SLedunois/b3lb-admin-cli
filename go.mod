@@ -3,7 +3,7 @@ module github.com/bigblueswarm/bbsctl
 go 1.19
 
 require (
-	github.com/bigblueswarm/bigblueswarm/v2 v2.1.3
+	github.com/bigblueswarm/bigblueswarm/v2 v2.2.0
 	github.com/spf13/cobra v1.3.0
 	github.com/stretchr/testify v1.8.0
 	gopkg.in/yaml.v3 v3.0.1
