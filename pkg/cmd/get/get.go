@@ -1,3 +1,4 @@
+// Package get provides the get command
 package get
 
 import (

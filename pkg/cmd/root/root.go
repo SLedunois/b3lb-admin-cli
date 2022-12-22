@@ -1,3 +1,4 @@
+// Package root provide the root bbsctl command
 package root
 
 import (

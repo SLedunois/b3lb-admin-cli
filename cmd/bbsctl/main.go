@@ -1,3 +1,4 @@
+// Binary bbsctl is a command line interface to manage BigBlueSwarm load balancer
 package main
 
 import (

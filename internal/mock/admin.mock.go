@@ -1,3 +1,4 @@
+// Package mock provide an internal mock to test
 package mock
 
 import (
@@ -64,7 +65,7 @@ func (a *AdminMock) BBSAPIStatus() (string, error) {
 	return BBSAPIStatusAdminFunc()
 }
 
-// GetConfigurations is a mock implementation returning the configuration
+// GetConfiguration is a mock implementation returning the configuration
 func (a *AdminMock) GetConfiguration() (*bbsconfig.Config, error) {
 	return GetConfigurationFunc()
 }

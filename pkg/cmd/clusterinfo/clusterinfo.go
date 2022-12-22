@@ -1,3 +1,4 @@
+// Package clusterinfo provides the cluster-info command
 package clusterinfo
 
 import (

@@ -1,3 +1,4 @@
+// Package test provides utilities to test cli commands
 package test
 
 import (

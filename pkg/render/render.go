@@ -1,3 +1,4 @@
+// Package render provides some renderer to display data
 package render
 
 import (

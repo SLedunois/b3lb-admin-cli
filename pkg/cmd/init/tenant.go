@@ -1,3 +1,4 @@
+// Package init provides the init command
 package init
 
 import (

@@ -1,3 +1,4 @@
+// Package delete provides the delete command
 package delete
 
 // Flags contains all delete command flags
@@ -9,7 +10,7 @@ func NewFlags() *Flags {
 }
 
 // TenantFlags contains all delete tenant command flags
-type TenantFlags struct{
+type TenantFlags struct {
 	Hostname string
 }
 
