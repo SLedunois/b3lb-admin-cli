@@ -1,3 +1,4 @@
+// Package get provides the get command
 package get
 
 import (
@@ -11,6 +12,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
+// TenantsCmd struct represents the get tenants command object
 type TenantsCmd struct {
 	Command *cobra.Command
 	Flags   *Flags

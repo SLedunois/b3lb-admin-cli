@@ -1,3 +1,4 @@
+// Package get provides the get command
 package get
 
 // Flags contains all Get command flags
@@ -6,7 +7,7 @@ type Flags struct {
 	JSON bool
 }
 
-// NewGetFlags initialize a new InstancesFlags object
+// NewFlags initialize a new Flags object
 func NewFlags() *Flags {
 	return &Flags{
 		CSV:  false,

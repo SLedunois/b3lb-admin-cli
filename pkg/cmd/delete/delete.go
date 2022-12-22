@@ -1,3 +1,4 @@
+// Package delete provides the delete command
 package delete
 
 import "github.com/spf13/cobra"

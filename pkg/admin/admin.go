@@ -1,3 +1,4 @@
+// Package admin provides some api to manage data to and from bigblueswarm
 package admin
 
 import (

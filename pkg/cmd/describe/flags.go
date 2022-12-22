@@ -1,3 +1,4 @@
+// Package describe provides the describe command
 package describe
 
 // Flags contains all config command flags

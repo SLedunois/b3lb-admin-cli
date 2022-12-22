@@ -1,3 +1,4 @@
+// Package system provides some system utilities
 package system
 
 // OperationNotPermittedExitCode is the GNU/Linux common exit code for operation not permitted

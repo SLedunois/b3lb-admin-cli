@@ -1,9 +1,11 @@
+// Package init provides the init command
 package init
 
 import (
 	"github.com/spf13/cobra"
 )
 
+// NewCmd initialize a new init cobra command
 func NewCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "init <command> [flags]",

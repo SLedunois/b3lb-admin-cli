@@ -1,3 +1,4 @@
+// Package describe provides the describe command
 package describe
 
 import "github.com/spf13/cobra"

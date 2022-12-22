@@ -1,3 +1,4 @@
+// Package apply provides apply command
 package apply
 
 // Flags contains all apply flags

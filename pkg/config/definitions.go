@@ -1,3 +1,4 @@
+// Package config manages the configuration
 package config
 
 // Config represents the config file struct
