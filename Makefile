@@ -9,12 +9,16 @@ help:
 test.unit:
 	@echo "[TEST.UNIT] run unit tests and coverage"
 	@go test -race -covermode=atomic -coverprofile=coverage.out \
-		github.com/bigblueswarm/bbsctl/pkg/cmd/root \
-		github.com/bigblueswarm/bbsctl/pkg/cmd/get \
-		github.com/bigblueswarm/bbsctl/pkg/cmd/clusterinfo \
-		github.com/bigblueswarm/bbsctl/pkg/cmd/describe \
 		github.com/bigblueswarm/bbsctl/pkg/admin \
+		github.com/bigblueswarm/bbsctl/pkg/cmd/apply \
+		github.com/bigblueswarm/bbsctl/pkg/cmd/clusterinfo \
+		github.com/bigblueswarm/bbsctl/pkg/cmd/delete \
+		github.com/bigblueswarm/bbsctl/pkg/cmd/describe \
+		github.com/bigblueswarm/bbsctl/pkg/cmd/get \
+		github.com/bigblueswarm/bbsctl/pkg/cmd/init \
+		github.com/bigblueswarm/bbsctl/pkg/cmd/root \
 		github.com/bigblueswarm/bbsctl/pkg/config \
+		github.com/bigblueswarm/bbsctl/pkg/render\
 		github.com/bigblueswarm/bbsctl/pkg/system
 
 #build: @ build bbsctl binary

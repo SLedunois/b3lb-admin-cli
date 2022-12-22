@@ -18,7 +18,7 @@ func TestInitConfig(t *testing.T) {
 	tests := []test{
 		{
 			name: "loading configuration should return an error if configuration is not found",
-			path: DefaultConfigPath(),
+			path: "/tmp/bbs.yml",
 			validator: func(t *testing.T, err error) {
 				assert.NotNil(t, err)
 			},

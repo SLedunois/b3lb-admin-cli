@@ -47,8 +47,9 @@ func TestInitInstances(t *testing.T) {
 			Name: "an existing file should return an error",
 			Args: []string{},
 			Validator: func(t *testing.T, output *bytes.Buffer, err error) {
+				home, _ := os.UserHomeDir()
 				assert.NotNil(t, err)
-				assert.Equal(t, "instances configuration file already exists. Please consider editing /home/codespace/.bigblueswarm/instances.yml file", err.Error())
+				assert.Equal(t, fmt.Sprintf("instances configuration file already exists. Please consider editing %s/.bigblueswarm/instances.yml file", home), err.Error())
 			},
 		},
 	}
