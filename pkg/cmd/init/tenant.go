@@ -48,6 +48,8 @@ func NewInitTenantCmd() *cobra.Command {
 func (cmd *TenantCmd) ApplyFlags() {
 	cmd.Command.Flags().StringVarP(&cmd.Flags.Destination, "dest", "d", bbsconfig.DefaultConfigFolder, "File folder destination")
 	cmd.Command.Flags().StringVarP(&cmd.Flags.Hostname, "host", "", "", "Tenant hostname")
+	cmd.Command.Flags().Int64VarP(&cmd.Flags.MeetingPool, "meeting_pool", "", -1, "Tenant meeting pool. This means the tenant can't create more meetings than the configured meeting pool. -1 is ignored.")
+	cmd.Command.Flags().Int64VarP(&cmd.Flags.UserPool, "user_pool", "", -1, "Tenant user pool. This means the tenant can't have more users than the configured user pool. -1 is ignored.")
 	cmd.Command.MarkFlagRequired("host")
 }
 
@@ -64,6 +66,14 @@ func (cmd *TenantCmd) init(command *cobra.Command, args []string) error {
 			Host: cmd.Flags.Hostname,
 		},
 		Instances: []string{},
+	}
+
+	if cmd.Flags.MeetingPool != -1 {
+		tenant.Spec.MeetingsPool = &cmd.Flags.MeetingPool
+	}
+
+	if cmd.Flags.UserPool != -1 {
+		tenant.Spec.UserPool = &cmd.Flags.UserPool
 	}
 
 	if err := os.MkdirAll(cmd.Flags.Destination, fsRights); err != nil {
