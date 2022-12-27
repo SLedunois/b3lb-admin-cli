@@ -24,7 +24,91 @@ func TestInitTenantCmd(t *testing.T) {
 
 	tests := []test.CmdTest{
 		{
-			Name: "a valid comment should init a new tenant file",
+			Name: "a valid command should init a new tenant file",
+			Args: []string{"--host", "localhost"},
+			Validator: func(t *testing.T, output *bytes.Buffer, err error) {
+				file := fmt.Sprintf("%s/.bigblueswarm/localhost.tenant.yml", homedir)
+				defer os.Remove(file)
+
+				b, err := os.ReadFile(file)
+				if err != nil {
+					t.Fatal(err)
+					return
+				}
+
+				var tenant bbsadmin.Tenant
+				if err := yaml.Unmarshal(b, &tenant); err != nil {
+					t.Fatal(err)
+					return
+				}
+
+				assert.Equal(t, "Tenant", tenant.Kind)
+				assert.Equal(t, "localhost", tenant.Spec.Host)
+				assert.Nil(t, tenant.Spec.MeetingsPool)
+				assert.Nil(t, tenant.Spec.UserPool)
+				assert.Equal(t, 0, len(tenant.Instances))
+				assert.Nil(t, err)
+				assert.Equal(t, fmt.Sprintf("tenant file successfully initialized. Please check %s/.bigblueswarm/localhost.tenant.yml file\n", homedir), string(output.Bytes()))
+			},
+		},
+		{
+			Name: "adding a meeting_pool flag should configure the tenant spec meeting pool configuration",
+			Args: []string{"--host", "localhost", "--meeting_pool", "10"},
+			Validator: func(t *testing.T, output *bytes.Buffer, err error) {
+				file := fmt.Sprintf("%s/.bigblueswarm/localhost.tenant.yml", homedir)
+				defer os.Remove(file)
+
+				b, err := os.ReadFile(file)
+				if err != nil {
+					t.Fatal(err)
+					return
+				}
+
+				var tenant bbsadmin.Tenant
+				if err := yaml.Unmarshal(b, &tenant); err != nil {
+					t.Fatal(err)
+					return
+				}
+
+				assert.Equal(t, "Tenant", tenant.Kind)
+				assert.Equal(t, "localhost", tenant.Spec.Host)
+				assert.Equal(t, int64(10), *tenant.Spec.MeetingsPool)
+				assert.Nil(t, tenant.Spec.UserPool)
+				assert.Equal(t, 0, len(tenant.Instances))
+				assert.Nil(t, err)
+				assert.Equal(t, fmt.Sprintf("tenant file successfully initialized. Please check %s/.bigblueswarm/localhost.tenant.yml file\n", homedir), string(output.Bytes()))
+			},
+		},
+		{
+			Name: "adding a user_pool flag should configure the tenant spec user pool configuration",
+			Args: []string{"--host", "localhost", "--user_pool", "100"},
+			Validator: func(t *testing.T, output *bytes.Buffer, err error) {
+				file := fmt.Sprintf("%s/.bigblueswarm/localhost.tenant.yml", homedir)
+				defer os.Remove(file)
+
+				b, err := os.ReadFile(file)
+				if err != nil {
+					t.Fatal(err)
+					return
+				}
+
+				var tenant bbsadmin.Tenant
+				if err := yaml.Unmarshal(b, &tenant); err != nil {
+					t.Fatal(err)
+					return
+				}
+
+				assert.Equal(t, "Tenant", tenant.Kind)
+				assert.Equal(t, "localhost", tenant.Spec.Host)
+				assert.Equal(t, int64(100), *tenant.Spec.UserPool)
+				assert.Nil(t, tenant.Spec.MeetingsPool)
+				assert.Equal(t, 0, len(tenant.Instances))
+				assert.Nil(t, err)
+				assert.Equal(t, fmt.Sprintf("tenant file successfully initialized. Please check %s/.bigblueswarm/localhost.tenant.yml file\n", homedir), string(output.Bytes()))
+			},
+		},
+		{
+			Name: "a valid command should init a new tenant file",
 			Args: []string{"--host", "localhost"},
 			Validator: func(t *testing.T, output *bytes.Buffer, err error) {
 				file := fmt.Sprintf("%s/.bigblueswarm/localhost.tenant.yml", homedir)

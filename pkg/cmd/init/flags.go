@@ -27,6 +27,8 @@ func NewInitInstancesFlags() *InstancesFlags {
 type TenantFlags struct {
 	Hostname    string
 	Destination string
+	UserPool    int64
+	MeetingPool int64
 }
 
 // NewInitTenantFlags initialize a new TenantFlags struct
