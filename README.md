@@ -45,6 +45,8 @@ Flags:
 Use "bbsctl [command] --help" for more information about a command.
 ```
 
+See the [documentation](docs/bbsctl.md) for more details.
+
 ### Init configuration
 Use `b3lbctl init config` to initialize `b3lbctl` configuration.
 ```bash
