@@ -5,6 +5,10 @@ SHELL := /bin/bash
 help:
 	@grep -E '[a-zA-Z\.\-]+:.*?@ .*$$' $(MAKEFILE_LIST)| tr -d '#'  | awk 'BEGIN {FS = ":.*?@ "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 
+#doc: @ generate command documentation
+doc:
+	@go run cmd/doc/main.go
+
 #test.unit: @ run unit tests and coverage
 test.unit:
 	@echo "[TEST.UNIT] run unit tests and coverage"
