@@ -12,7 +12,40 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-const tenantFileNameFormatter = "%s.tenant.yml"
+const (
+	tenantFileNameFormatter = "%s.tenant.yml"
+
+	initTenantExample = `
+bbsctl init tenant --host bbs.example.com
+# generates the following file
+#
+# kind: Tenant
+# spec:
+    host: bbs.example.com
+# instances: []
+
+bbsctl init tenant --host bbs.example.com --dest /path/to/file
+
+bbsctl init tenant --host bbs.example.com --meeting_pool 10
+# generates the following file
+#
+# kind: Tenant
+# spec:
+#    host: bbs.example.com
+#    meeting_pool: 10
+# instances: []
+
+bbsctl init tenant --host bbs.example.com --meeting_pool 10 --user_pool 100
+# generates the following file
+#
+# kind: Tenant
+# spec:
+#    host: bbs.example.com
+#    meeting_pool: 10
+#    user_pool: 100
+# instances: []
+	`
+)
 
 // TenantCmd represents the `bbsctl init tenant` command
 type TenantCmd struct {
@@ -24,9 +57,10 @@ type TenantCmd struct {
 func NewInitTenantCmd() *cobra.Command {
 	cmd := &TenantCmd{
 		Command: &cobra.Command{
-			Use:   "tenant [flags]",
-			Short: "Initialize a new bigblueswarm tenant configuration file",
-			Long:  "Initialize a new bigblueswarm tenant configuration file if not exits",
+			Use:     "tenant [flags]",
+			Short:   "Initialize a new bigblueswarm tenant configuration file",
+			Long:    "Initialize a new bigblueswarm tenant configuration file if not exits",
+			Example: initTenantExample,
 			Run: func(cmd *cobra.Command, args []string) {
 				if len(args) == 0 {
 					cmd.Help()

@@ -12,7 +12,18 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-const instancesConfigFilename = "instances.yml"
+const (
+	instancesConfigFilename = "instances.yml"
+	initInstancesCmdExample = `
+bbsctl init instances --dest /path/to/file
+
+bbsctl init instances
+# generate the following file
+#
+# kind: InstanceList
+# instances: {}
+`
+)
 
 // InstancesCmd represents the `bbsctl init instances` command
 type InstancesCmd struct {
@@ -24,9 +35,10 @@ type InstancesCmd struct {
 func NewInitInstancesCmd() *cobra.Command {
 	cmd := &InstancesCmd{
 		Command: &cobra.Command{
-			Use:   "instances [flags]",
-			Short: "Initialize bigblueswarm instances file",
-			Long:  "Create instances list file if it does not exists",
+			Use:     "instances [flags]",
+			Short:   "Initialize bigblueswarm instances file",
+			Long:    "Create instances list file if it does not exists",
+			Example: initInstancesCmdExample,
 		},
 		Flags: NewInitInstancesFlags(),
 	}

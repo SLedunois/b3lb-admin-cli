@@ -12,7 +12,30 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-const fsRights = 0755
+const (
+	fsRights             = 0755
+	initConfigCmdExample = `
+bbsctl init config --dest /path/to/files
+
+bbsctl init config
+# generates the following file
+#
+# bbs: ""
+# apiKey: ""
+
+bbsctl init config --bbs http://bbs.example.com
+# generates the following file
+# 
+# bbs: http://bbs.example.com
+# apiKey: ""
+
+bbsctl init config --bbs http://bbs.example.com --key api_key
+# generates the following file
+#
+# bbs: http://bbs.example.com
+# apiKey: api_key
+`
+)
 
 // InitConfigCmd represents the `bbsctl init config` command
 type InitConfigCmd struct {
@@ -24,9 +47,10 @@ type InitConfigCmd struct {
 func NewInitConfigCmd() *cobra.Command {
 	cmd := &InitConfigCmd{
 		Command: &cobra.Command{
-			Use:   "config [flags]",
-			Short: "Initialize bbsctl configuration",
-			Long:  "Create bbsctl if not exists and initialize a basic configuration",
+			Use:     "config [flags]",
+			Short:   "Initialize bbsctl configuration",
+			Long:    "Create bbsctl if not exists and initialize a basic configuration",
+			Example: initConfigCmdExample,
 		},
 		Flags: NewInitConfigFlags(),
 	}
