@@ -221,12 +221,12 @@ func TestClusterStatus(t *testing.T) {
 	initTests()
 	bodyStatus := []balancer.InstanceStatus{
 		{
-			Host:               "http://localhost/bigbluebutton",
-			CPU:                2.46,
-			Mem:                66.34,
-			ActiveMeeting:      0,
-			ActiveParticipants: 0,
-			APIStatus:          "Up",
+			Host:         "http://localhost/bigbluebutton",
+			CPU:          2.46,
+			Mem:          66.34,
+			Meetings:     0,
+			Participants: 0,
+			APIStatus:    "Up",
 		},
 	}
 

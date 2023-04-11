@@ -101,12 +101,12 @@ func (cmd *ClusterInfoCmd) process(command *cobra.Command, args []string) error 
 			instance.Host,
 			colorizedMetrics(instance.CPU),
 			colorizedMetrics(instance.Mem),
-			instance.ActiveMeeting,
-			instance.ActiveParticipants,
+			instance.Meetings,
+			instance.Participants,
 		})
 
-		activeMeetingSum += instance.ActiveMeeting
-		activeParticipantsSum += instance.ActiveParticipants
+		activeMeetingSum += instance.Meetings
+		activeParticipantsSum += instance.Participants
 	}
 
 	renderClusterHeaderTable(command, bbsStatus, activeMeetingSum, activeParticipantsSum, int64(len(tenants.Tenants)))

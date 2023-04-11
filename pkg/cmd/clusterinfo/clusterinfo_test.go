@@ -67,12 +67,12 @@ func TestClusterInfo(t *testing.T) {
 				mock.ClusterStatusAdminFunc = func() ([]balancer.InstanceStatus, error) {
 					return []balancer.InstanceStatus{
 						{
-							Host:               "http://localhost/bigbluebutton",
-							CPU:                8.32,
-							Mem:                55.36,
-							ActiveMeeting:      1,
-							ActiveParticipants: 10,
-							APIStatus:          "Up",
+							Host:         "http://localhost/bigbluebutton",
+							CPU:          8.32,
+							Mem:          55.36,
+							Meetings:     1,
+							Participants: 10,
+							APIStatus:    "Up",
 						},
 					}, nil
 				}
