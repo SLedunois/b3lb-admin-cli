@@ -21,7 +21,16 @@ bbsctl init tenant --host bbs.example.com
 #
 # kind: Tenant
 # spec:
-    host: bbs.example.com
+#    host: bbs.example.com
+# instances: []
+
+bbsctl init tenant --host bbs.example.com --secret dummy_secret
+# generates the following file
+#
+# kind: Tenant
+# spec:
+#    host: bbs.example.com
+#		 secret: dummy_secret
 # instances: []
 
 bbsctl init tenant --host bbs.example.com --dest /path/to/file
@@ -82,6 +91,7 @@ func NewInitTenantCmd() *cobra.Command {
 func (cmd *TenantCmd) ApplyFlags() {
 	cmd.Command.Flags().StringVarP(&cmd.Flags.Destination, "dest", "d", bbsconfig.DefaultConfigFolder, "File folder destination")
 	cmd.Command.Flags().StringVarP(&cmd.Flags.Hostname, "host", "", "", "Tenant hostname")
+	cmd.Command.Flags().StringVarP(&cmd.Flags.Secret, "secret", "", "", "Tenant secret")
 	cmd.Command.Flags().Int64VarP(&cmd.Flags.MeetingPool, "meeting_pool", "", -1, "Tenant meeting pool. This means the tenant can't create more meetings than the configured meeting pool. -1 is ignored.")
 	cmd.Command.Flags().Int64VarP(&cmd.Flags.UserPool, "user_pool", "", -1, "Tenant user pool. This means the tenant can't have more users than the configured user pool. -1 is ignored.")
 	cmd.Command.MarkFlagRequired("host")
@@ -100,6 +110,10 @@ func (cmd *TenantCmd) init(command *cobra.Command, args []string) error {
 			Host: cmd.Flags.Hostname,
 		},
 		Instances: []string{},
+	}
+
+	if cmd.Flags.Secret != "" {
+		tenant.Spec.Secret = cmd.Flags.Secret
 	}
 
 	if cmd.Flags.MeetingPool != -1 {
