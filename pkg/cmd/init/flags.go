@@ -26,6 +26,7 @@ func NewInitInstancesFlags() *InstancesFlags {
 // TenantFlags represents `bbsctl init tenant` flags
 type TenantFlags struct {
 	Hostname    string
+	Secret      string
 	Destination string
 	UserPool    int64
 	MeetingPool int64
